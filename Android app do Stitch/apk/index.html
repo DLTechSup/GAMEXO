@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;700;800&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#05091a;font-family:Rubik,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font-family:inherit;cursor:pointer;border:0}
+i{font-family:'Material Symbols Outlined';font-style:normal;font-weight:400;font-variation-settings:'FILL' 1;line-height:1;display:inline-block;user-select:none}
+a{color:#adc6ff;text-decoration:none}
+a:hover{color:#d8e2ff}
+::-webkit-scrollbar{display:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes drop{0%{transform:translateY(-14px) scale(.7);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes conf{0%{transform:translateY(-40px) rotate(0);opacity:1}100%{transform:translateY(760px) rotate(720deg);opacity:.1}}
+@keyframes grow{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
+@keyframes ready{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}80%{transform:scale(1);opacity:1}100%{transform:scale(.8);opacity:0}}
+@keyframes ring{0%{transform:scale(.8);opacity:.8}100%{transform:scale(2);opacity:0}}
+@keyframes shine{0%{transform:translateX(-120%) skewX(-25deg)}100%{transform:translateX(420%) skewX(-25deg)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:18px 12px 40px;background:radial-gradient(1200px 600px at 50% -10%,#141b3a 0%,#05091a 70%)">
+<div style="width:390px;height:844px;position:relative;background:#0b1326;border-radius:40px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.65),0 0 0 9px #11162b,0 0 0 11px #262c47;flex:none">
+
+<div style="position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:14px 16px 96px">
+
+<sc-if value="{{ hub }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none">
+<button onClick="{{ goPerfil }}" style="position:relative;width:38px;height:38px;border-radius:999px;background:#adc6ff;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #004395"><i style="font-size:20px;color:#002e6a">person</i><span style="position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#ca8100;color:#3e2400;font-size:9px;font-weight:800;padding:1px 5px;border-radius:999px;box-shadow:0 2px 0 #653e00">N.{{ lvl }}</span></button>
+<div style="display:flex;align-items:center;gap:4px;background:#222a3d;padding:5px 6px 5px 10px;border-radius:999px;box-shadow:0 2px 0 #131b2e"><i style="font-size:17px;color:#ffb95f">monetization_on</i><span style="font-size:13px;font-weight:800;color:#dae2fd">{{ coins }}</span><button onClick="{{ goLoja }}" style="width:20px;height:20px;border-radius:999px;background:#ffb95f;color:#472a00;display:flex;align-items:center;justify-content:center;margin-left:2px"><i style="font-size:14px">add</i></button></div>
+<div style="display:flex;align-items:center;gap:5px;background:#222a3d;padding:6px 11px;border-radius:999px;box-shadow:0 2px 0 #131b2e"><i style="font-size:17px;color:#adc6ff">emoji_events</i><span style="font-size:13px;font-weight:800;color:#dae2fd">{{ trophies }}</span></div>
+<button onClick="{{ goConfig }}" style="width:36px;height:36px;border-radius:999px;background:#171f33;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #060e20"><i style="font-size:19px;color:#c2c6d6">settings</i></button>
+<button onClick="{{ goPerfil }}" style="width:36px;height:36px;border-radius:999px;background:#adc6ff;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #004395"><i style="font-size:19px;color:#002e6a">account_circle</i></button>
+</div>
+</sc-if>
+
+<sc-if value="{{ arena }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none">
+<button onClick="{{ leaveMatch }}" style="width:44px;height:44px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #131b2e"><i style="font-size:22px;color:#dae2fd">arrow_back</i></button>
+<span style="font-size:20px;font-weight:900;color:#dae2fd;letter-spacing:-.4px;flex:1">{{ arenaTitle }}</span>
+<div style="display:flex;align-items:center;gap:5px;background:#222a3d;padding:7px 12px;border-radius:999px;box-shadow:0 2px 0 #131b2e"><i style="font-size:17px;color:#ffb95f">monetization_on</i><span style="font-size:13px;font-weight:800;color:#dae2fd">{{ coins }}</span></div>
+<button onClick="{{ pause }}" style="width:44px;height:44px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #131b2e"><i style="font-size:20px;color:#dae2fd">pause</i></button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;justify-content:space-between;background:#131b2e;padding:8px 12px;border-radius:999px;box-shadow:0 4px 0 #060e20">
+<div style="display:flex;gap:8px"><div style="display:flex;align-items:center;gap:6px;background:#222a3d;padding:4px 12px;border-radius:999px"><i style="font-size:18px;color:#ffb95f">monetization_on</i><span style="font-size:13px;font-weight:800;color:#dae2fd">{{ coins }}</span></div><div style="display:flex;align-items:center;gap:6px;background:#222a3d;padding:4px 12px;border-radius:999px"><i style="font-size:18px;color:#adc6ff">emoji_events</i><span style="font-size:13px;font-weight:800;color:#dae2fd">{{ trophies }}</span></div></div>
+<div style="display:flex;align-items:center;gap:6px;background:#222a3d;padding:5px 12px;border-radius:999px"><i style="font-size:16px;color:#ffb95f">bolt</i><span style="font-size:12px;font-weight:800;color:#dae2fd">{{ livesText }}</span><sc-if value="{{ livesLow }}"><span style="font-size:10px;font-weight:700;color:#8c909f">· {{ lifeTimer }}</span></sc-if></div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:center;padding-top:6px">
+<div style="position:relative;width:200px;height:120px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;left:14px;top:14px;width:80px;height:80px;border-radius:22px;background:#ffb4ab;display:flex;align-items:center;justify-content:center;transform:rotate(-12deg);box-shadow:0 8px 0 #93000a,0 16px 24px rgba(244,63,94,.35)"><i style="font-size:54px;color:#690005">close</i></div>
+<div style="position:absolute;right:14px;top:20px;width:80px;height:80px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center;transform:rotate(12deg);box-shadow:0 8px 0 #004395,0 16px 24px rgba(77,142,255,.35)"><div style="width:36px;height:36px;border-radius:999px;background:#060e20;box-shadow:inset 0 4px 4px rgba(0,0,0,.6)"></div></div>
+<i style="position:absolute;top:-2px;font-size:32px;color:#ffb95f;animation:pulse 2s infinite">hotel_class</i>
+</div>
+<div style="display:flex;align-items:center;gap:6px;padding:3px 12px;border-radius:999px;background:#222a3d;box-shadow:0 2px 0 #131b2e;margin-top:4px"><i style="font-size:14px;color:#ffb95f">bolt</i><span style="font-size:11px;font-weight:800;color:#ffb95f;letter-spacing:1px">CASUAL ARCADE</span></div>
+<h1 style="margin:8px 0 0;font-size:34px;font-weight:900;color:#dae2fd;letter-spacing:-1px;text-shadow:0 4px 0 #060e20">JOGO DA <span style="color:#ffb95f">VELHA</span></h1>
+<p style="margin:2px 0 0;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:600;color:#c2c6d6">Desafie amigos e suba de nível!</p>
+</div>
+<button onClick="{{ goModos }}" style="position:relative;width:100%;height:72px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f 45%,#ca8100);box-shadow:0 8px 0 #653e00,0 16px 32px rgba(202,129,0,.45);display:flex;align-items:center;justify-content:center;gap:10px;overflow:hidden">
+<div style="position:absolute;top:5px;left:24px;right:24px;height:14px;background:rgba(255,255,255,.35);border-radius:999px;filter:blur(1px)"></div>
+<div style="position:absolute;top:0;bottom:0;width:70px;background:rgba(255,255,255,.22);animation:shine 2.8s infinite"></div>
+<i style="font-size:34px;color:#3e2400;position:relative">play_arrow</i><span style="font-size:26px;font-weight:900;color:#3e2400;letter-spacing:1px;position:relative">JOGAR AGORA</span></button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<button onClick="{{ goDesafios }}" style="position:relative;height:112px;border-radius:24px;background:#222a3d;box-shadow:0 6px 0 #131b2e;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px">
+<div style="position:absolute;top:-8px;right:-6px;background:#ffb4ab;color:#690005;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;box-shadow:0 2px 0 #93000a">NOVO</div>
+<div style="width:48px;height:48px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #3c0091;margin-bottom:8px"><i style="font-size:26px;color:#d0bcff">track_changes</i></div>
+<span style="font-size:15px;font-weight:800;color:#dae2fd">DESAFIOS</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">{{ openMissions }} disponíveis</span></button>
+<button onClick="{{ goLoja }}" style="height:112px;border-radius:24px;background:#222a3d;box-shadow:0 6px 0 #131b2e;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px">
+<div style="width:48px;height:48px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #00285d;margin-bottom:8px"><i style="font-size:26px;color:#00285d">palette</i></div>
+<span style="font-size:15px;font-weight:800;color:#dae2fd">PERSONALIZAR</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Skins &amp; Temas</span></button>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#171f33;padding:14px;border-radius:24px;box-shadow:0 4px 0 #060e20">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:999px;background:rgba(202,129,0,.3);display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">verified</i></div><div><span style="display:block;font-size:11px;font-weight:800;letter-spacing:1px;color:#ffb95f">MISSÃO DO DIA</span><span style="font-size:13px;font-weight:700;color:#dae2fd">Vença 1 partida</span></div></div>
+<div style="display:flex;align-items:center;gap:4px;background:#222a3d;padding:3px 9px;border-radius:999px"><i style="font-size:14px;color:#ffb95f">monetization_on</i><span style="font-size:11px;font-weight:800;color:#dae2fd">+30</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#c2c6d6;margin-top:4px"><span>Progresso</span><span style="color:#dae2fd">{{ dailyDone }} / 1</span></div>
+<div style="width:100%;height:12px;border-radius:999px;background:#2d3449;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#4d8eff,#adc6ff);width:{{ dailyPct }}"></div></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isModos }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<div><span style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#ffb95f;background:#222a3d;padding:3px 9px;border-radius:999px">● ESCOLHA SEU DESAFIO</span><h2 style="margin:8px 0 0;font-size:30px;font-weight:900;color:#dae2fd;letter-spacing:-.8px">Modos de Jogo</h2></div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;background:#222a3d;padding:6px 12px;border-radius:18px"><span style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#dae2fd"><i style="font-size:16px;color:#ffb95f">bolt</i>{{ livesText }} Vidas</span><sc-if value="{{ livesLow }}"><span style="font-size:10px;font-weight:700;color:#8c909f">Próxima em {{ lifeTimer }}</span></sc-if></div>
+</div>
+<span style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:#c2c6d6">SELECIONE O FORMATO</span>
+<sc-for list="{{ formats }}" as="f" hint-placeholder-count="3">
+<button onClick="{{ f.onClick }}" style="{{ f.style }}">
+<div style="{{ f.iconStyle }}"><i style="font-size:26px;color:#fff">{{ f.icon }}</i></div>
+<div style="flex:1;text-align:left;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:15px;font-weight:800;color:{{ f.titleColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.name }}</span><span style="{{ f.tagStyle }}">{{ f.tag }}</span></div><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6">{{ f.desc }}</span></div>
+<i style="font-size:22px;color:{{ f.radioColor }}">{{ f.radio }}</i>
+</button>
+</sc-for>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px"><span style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:#c2c6d6">DIFICULDADE DA INTELIGÊNCIA</span><span style="font-size:11px;font-weight:700;color:#8c909f">4 Níveis</span></div>
+<sc-for list="{{ diffs }}" as="d" hint-placeholder-count="4">
+<button onClick="{{ d.onClick }}" style="{{ d.style }}">
+<sc-if value="{{ d.recommended }}"><span style="position:absolute;top:-9px;right:14px;background:#ffb95f;color:#3e2400;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.5px">🔥 RECOMENDADO</span></sc-if>
+<div style="display:flex;gap:12px;align-items:flex-start">
+<div style="{{ d.iconStyle }}"><i style="font-size:22px;color:#fff">{{ d.icon }}</i></div>
+<div style="flex:1;text-align:left">
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;font-weight:800;color:{{ d.titleColor }}">{{ d.name }}</span><span style="font-size:12px;color:#ffb95f;letter-spacing:1px">{{ d.stars }}</span></div>
+<span style="display:block;font-size:11px;font-weight:800;color:{{ d.subColor }};margin:1px 0 4px">{{ d.sub }}</span>
+<span style="display:block;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6;line-height:16px">{{ d.desc }}</span>
+<div style="display:flex;align-items:center;gap:8px;margin-top:8px"><span style="display:flex;align-items:center;gap:4px;background:#171f33;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800;color:#dae2fd"><i style="font-size:13px;color:#adc6ff">military_tech</i>+{{ d.xp }} XP</span><span style="display:flex;align-items:center;gap:4px;background:#171f33;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800;color:#dae2fd"><i style="font-size:13px;color:#ffb95f">monetization_on</i>+{{ d.gold }}</span><span style="margin-left:auto;font-size:10px;font-weight:800;color:#8c909f">{{ d.state }}</span></div>
+</div></div>
+</button>
+</sc-for>
+<span style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:#c2c6d6;margin-top:4px">CONFIGURAÇÃO RÁPIDA</span>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:13px;font-weight:700;color:#dae2fd">Quem começa o jogo?</span>
+<div style="display:flex;gap:8px">
+<sc-for list="{{ starters }}" as="s" hint-placeholder-count="3"><button onClick="{{ s.onClick }}" style="{{ s.style }}"><i style="font-size:16px">{{ s.icon }}</i>{{ s.name }}</button></sc-for>
+</div>
+</div>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+<div><span style="display:block;font-size:13px;font-weight:700;color:#dae2fd">Formato da Rodada</span><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#c2c6d6">Vitória em melhor de 3 ou blitz</span></div>
+<div style="display:flex;gap:6px">
+<sc-for list="{{ series }}" as="s" hint-placeholder-count="2"><button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.name }}</button></sc-for>
+</div>
+</div>
+<button onClick="{{ startFromModos }}" style="width:100%;height:60px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f 50%,#ca8100);box-shadow:0 7px 0 #653e00,0 14px 24px rgba(202,129,0,.4);display:flex;align-items:center;justify-content:center;gap:8px;font-size:20px;font-weight:900;color:#3e2400;letter-spacing:.5px">INICIAR PARTIDA ⚔️</button>
+<div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:700;color:#c2c6d6"><i style="font-size:14px;color:#ffb95f">bolt</i>Vidas só são gastas ao perder • Modo {{ diffName }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMapa }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;justify-content:space-between;background:#171f33;padding:12px 14px;border-radius:20px">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#d0bcff">explore</i></div><div><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#c2c6d6">MUNDO 1 · <span style="color:#ffb95f">★ {{ starsTotal }}/30</span></span><span style="font-size:17px;font-weight:800;color:#dae2fd">Vale dos Tabuleiros</span></div></div>
+<i style="font-size:20px;color:#8c909f">swap_horiz</i>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;background:#222a3d;padding:7px 14px;border-radius:999px"><span style="font-size:11px;font-weight:800;color:#ffb95f">● Fase {{ phase }} Liberada! Desafie o Robô Tático</span><span style="font-size:11px;font-weight:800;color:#dae2fd">⚡ {{ livesText }}</span></div>
+<div style="position:relative;display:flex;flex-direction:column-reverse;gap:10px;padding:10px 0">
+<sc-for list="{{ phases }}" as="p" hint-placeholder-count="10">
+<div style="{{ p.rowStyle }}">
+<button onClick="{{ p.onClick }}" style="{{ p.style }}"><i style="font-size:22px;color:{{ p.iconColor }}">{{ p.icon }}</i><span style="font-size:15px;font-weight:900;color:{{ p.iconColor }}">{{ p.label }}</span></button>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#ffb95f;letter-spacing:2px">{{ p.stars }}</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">{{ p.note }}</span></div>
+</div>
+</sc-for>
+</div>
+<div style="background:#171f33;border-radius:24px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 #060e20">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:42px;height:42px;border-radius:14px;background:linear-gradient(180deg,#ffddb8,#ca8100);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#3e2400">{{ phase }}</div>
+<div style="flex:1"><div style="display:flex;gap:6px;align-items:center"><span style="font-size:9px;font-weight:800;color:#d0bcff;background:#571bc1;padding:2px 7px;border-radius:999px">NORMAL</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Duelo 3x3</span></div><span style="font-size:15px;font-weight:800;color:#dae2fd">Vale Tático — Robô Mestre</span></div>
+<span style="font-size:11px;font-weight:800;color:#ffb95f">⚡ -1 se perder</span>
+</div>
+<div style="background:#131b2e;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:flex-start"><i style="font-size:18px;color:#ffb95f">target</i><div><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#8c909f">Missão da Rodada</span><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#dae2fd">Vença fazendo 2 trincas com a peça <b style="color:#ffb4ab">X</b> em menos de 8 jogadas.</span></div></div>
+<div style="display:flex;gap:10px;font-size:11px;font-weight:800;color:#c2c6d6"><span style="color:#ffb95f">Ⓢ +120 Ouro</span><span style="color:#adc6ff">✧ +200 XP</span><span style="color:#d0bcff">✪ 3 Estrelas</span></div>
+<button onClick="{{ playPhase }}" style="width:100%;height:56px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f 50%,#ca8100);box-shadow:0 6px 0 #653e00;display:flex;align-items:center;justify-content:center;gap:8px;font-size:18px;font-weight:900;color:#3e2400"><i style="font-size:22px">play_arrow</i>JOGAR FASE {{ phase }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMatch }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:center"><div style="display:flex;align-items:center;gap:8px;background:#222a3d;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.25)"><span style="width:9px;height:9px;border-radius:999px;background:#ffb95f;animation:pulse 1.2s infinite"></span><span style="font-size:13px;font-weight:800;color:#dae2fd;letter-spacing:.5px">{{ statusText }}</span></div></div>
+<div style="background:#222a3d;border-radius:18px;padding:10px 12px;box-shadow:0 8px 0 #131b2e;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+<div style="position:relative"><div style="width:48px;height:48px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #131b2e"><i style="font-size:28px;color:#adc6ff">face</i></div><div style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:999px;background:#93000a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#ffb4ab">✕</div></div>
+<div style="min-width:0"><span style="display:block;font-size:13px;font-weight:700;color:#dae2fd">Você</span><span style="font-size:22px;font-weight:800;color:#adc6ff;line-height:1">{{ scoreP1 }}</span></div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:center;padding:0 8px">
+<div style="background:#2d3449;padding:2px 10px;border-radius:999px"><span style="font-size:11px;font-weight:900;color:#ffb95f;letter-spacing:2px">VS</span></div>
+<div style="display:flex;align-items:center;gap:3px;margin-top:4px;color:#c2c6d6"><i style="font-size:14px">timer</i><span style="font-size:11px;font-weight:700">{{ timerText }}</span></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex:1;min-width:0">
+<div style="text-align:right;min-width:0"><span style="display:block;font-size:13px;font-weight:700;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ botName }}</span><span style="font-size:22px;font-weight:800;color:#d0bcff;line-height:1">{{ scoreP2 }}</span></div>
+<div style="position:relative"><div style="width:48px;height:48px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #131b2e"><i style="font-size:26px;color:#d0bcff">smart_toy</i></div><div style="position:absolute;bottom:-4px;left:-4px;width:24px;height:24px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#d0bcff">◯</div></div>
+</div>
+</div>
+<sc-if value="{{ isPhaseMatch }}" hint-placeholder-val="{{ false }}">
+<div style="background:#222a3d;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center"><div style="width:34px;height:34px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">target</i></div><div><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">MISSÃO ESTRATÉGICA</span><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#dae2fd">Vença em menos de 8 jogadas · Lances: {{ moves }}/8</span></div></div>
+</sc-if>
+<div style="width:100%;display:flex;justify-content:center">
+<div style="{{ boardStyle }}">
+<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:12px;width:100%;height:100%">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="9">
+<button onClick="{{ c.onClick }}" style="{{ c.style }}">
+<sc-if value="{{ c.isX }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ xShadow }});animation:drop .18s ease-out"><line x1="22" y1="22" x2="78" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="78" y1="22" x2="22" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="24" y1="20" x2="76" y2="72" stroke="#ffffff" stroke-width="4" opacity=".55" stroke-linecap="round"></line></svg></sc-if>
+<sc-if value="{{ c.isO }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ oShadow }});animation:drop .18s ease-out"><circle cx="50" cy="50" r="28" fill="none" stroke="{{ oColor }}" stroke-width="16"></circle><circle cx="50" cy="48" r="28" fill="none" stroke="#ffffff" stroke-width="3" opacity=".5"></circle></svg></sc-if>
+<sc-if value="{{ c.isEmpty }}"><i style="font-size:30px;color:{{ c.plusColor }};opacity:{{ c.plusOpacity }}">add</i></sc-if>
+</button>
+</sc-for>
+<sc-if value="{{ hasWinLine }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+<line x1="{{ lx1 }}" y1="{{ ly1 }}" x2="{{ lx2 }}" y2="{{ ly2 }}" stroke="#ffb95f" stroke-width="9" stroke-linecap="round" opacity=".85" style="filter:drop-shadow(0 0 8px #ffb95f);stroke-dasharray:200;animation:grow .45s ease-out forwards"></line>
+<line x1="{{ lx1 }}" y1="{{ ly1 }}" x2="{{ lx2 }}" y2="{{ ly2 }}" stroke="#ffffff" stroke-width="3" stroke-linecap="round" style="stroke-dasharray:200;animation:grow .45s ease-out forwards"></line>
+</svg>
+</sc-if>
+</div>
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,14,32,.55);border-radius:28px"><span style="font-size:46px;font-weight:900;color:#ffb95f;text-shadow:0 6px 0 #653e00;animation:ready .8s ease-out">{{ readyText }}</span></div>
+</sc-if>
+</div>
+</div>
+<div style="display:flex;gap:12px">
+<button onClick="{{ restart }}" style="flex:1;height:56px;border-radius:999px;background:#2d3449;color:#dae2fd;box-shadow:0 4px 0 #060e20;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:800"><i style="font-size:20px">refresh</i>Reiniciar</button>
+<button onClick="{{ hint }}" style="flex:1;height:56px;border-radius:999px;background:#ffb95f;color:#472a00;box-shadow:0 4px 0 #ca8100;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:800"><i style="font-size:20px">lightbulb</i>Dica ({{ hints }})</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDuel }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;background:#171f33;padding:6px;border-radius:999px;gap:6px">
+<sc-for list="{{ duelTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.onClick }}" style="{{ t.style }}"><i style="font-size:16px">{{ t.icon }}</i>{{ t.name }}</button></sc-for>
+</div>
+<sc-if value="{{ duelOnline }}" hint-placeholder-val="{{ false }}">
+<div style="background:#171f33;border-radius:18px;padding:12px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><span style="width:10px;height:10px;border-radius:999px;background:#10b981;box-shadow:0 0 10px #10b981"></span><div><span style="display:block;font-size:12px;font-weight:800;color:#dae2fd">Pareado via Wi-Fi Direto</span><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f">Rede: Arena_Play_5G (Peer #384)</span></div></div><span style="font-size:12px;font-weight:800;color:#10b981">▁▄▆ 12 ms</span></div>
+</sc-if>
+<sc-if value="{{ duelLocal }}" hint-placeholder-val="{{ true }}">
+<div style="background:#171f33;border-radius:18px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="display:flex;align-items:center;gap:10px"><i style="font-size:20px;color:#d0bcff">table_restaurant</i><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#dae2fd">Posicione o celular no centro da mesa</span></div><button onClick="{{ toggleFlip }}" style="background:#222a3d;color:#dae2fd;font-size:11px;font-weight:800;padding:10px 12px;border-radius:999px;white-space:nowrap">↻ Girar J2 (180°)</button></div>
+</sc-if>
+<div style="{{ p2CardStyle }}">
+<div style="display:flex;align-items:center;gap:10px;flex:1"><div style="width:44px;height:44px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#d0bcff">smart_toy</i></div><div><span style="display:block;font-size:14px;font-weight:800;color:#dae2fd">{{ p2Name }}</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Círculo ◯ · {{ scoreP2 }} Vitórias</span></div></div>
+<span style="{{ p2TurnStyle }}">{{ p2Turn }}</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+<div style="display:flex;gap:4px;background:#171f33;padding:5px;border-radius:999px">
+<sc-for list="{{ clocks }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.name }}</button></sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:8px;background:#171f33;padding:8px 14px;border-radius:999px"><span style="font-size:15px;font-weight:900;color:#adc6ff">{{ scoreP1 }}</span><span style="font-size:10px;font-weight:800;color:#c2c6d6;letter-spacing:.5px">MELHOR DE 5</span><span style="font-size:15px;font-weight:900;color:#d0bcff">{{ scoreP2 }}</span></div>
+</div>
+<div style="{{ boardStyle }}">
+<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:12px;width:100%;height:100%">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="9">
+<button onClick="{{ c.onClick }}" style="{{ c.style }}">
+<sc-if value="{{ c.isX }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ xShadow }});animation:drop .18s ease-out"><line x1="22" y1="22" x2="78" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="78" y1="22" x2="22" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line></svg></sc-if>
+<sc-if value="{{ c.isO }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ oShadow }});animation:drop .18s ease-out"><circle cx="50" cy="50" r="28" fill="none" stroke="{{ oColor }}" stroke-width="16"></circle></svg></sc-if>
+<sc-if value="{{ c.isEmpty }}"><i style="font-size:30px;color:{{ c.plusColor }};opacity:{{ c.plusOpacity }}">add</i></sc-if>
+</button>
+</sc-for>
+<sc-if value="{{ hasWinLine }}" hint-placeholder-val="{{ false }}">
+<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><line x1="{{ lx1 }}" y1="{{ ly1 }}" x2="{{ lx2 }}" y2="{{ ly2 }}" stroke="#ffb95f" stroke-width="9" stroke-linecap="round" opacity=".85" style="filter:drop-shadow(0 0 8px #ffb95f);stroke-dasharray:200;animation:grow .45s ease-out forwards"></line></svg>
+</sc-if>
+</div>
+</div>
+<div style="background:#222a3d;border-radius:20px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 0 #131b2e">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#00285d">person</i></div><div><span style="display:block;font-size:14px;font-weight:800;color:#dae2fd">{{ p1Name }}</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Cruz ✕ · {{ scoreP1 }} Vitórias</span></div></div>
+<span style="{{ p1TurnStyle }}">{{ p1Turn }}</span>
+<span style="font-size:15px;font-weight:900;color:#ffb95f">{{ timerText }}</span>
+</div>
+<sc-if value="{{ duelOnline }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:8px;background:#171f33;padding:10px;border-radius:999px"><span style="font-size:10px;font-weight:800;color:#c2c6d6;letter-spacing:1px">REAÇÕES:</span>
+<sc-for list="{{ reactions }}" as="r" hint-placeholder-count="5"><button onClick="{{ r.onClick }}" style="width:38px;height:38px;border-radius:999px;background:#222a3d;font-size:17px">{{ r.emoji }}</button></sc-for>
+<span style="margin-left:auto;font-size:16px">{{ reactionShown }}</span></div>
+</sc-if>
+<div style="display:flex;gap:12px">
+<button onClick="{{ restart }}" style="flex:1;height:52px;border-radius:999px;background:#2d3449;color:#dae2fd;box-shadow:0 4px 0 #060e20;font-size:15px;font-weight:800">↻ Reiniciar</button>
+<button onClick="{{ leaveMatch }}" style="flex:1;height:52px;border-radius:999px;background:#222a3d;color:#ffb4ab;box-shadow:0 4px 0 #131b2e;font-size:15px;font-weight:800">⚐ Desistir</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLobby }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><button onClick="{{ goModos }}" style="width:40px;height:40px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#dae2fd">arrow_back</i></button><span style="font-size:19px;font-weight:900;color:#dae2fd;letter-spacing:-.4px">Lobby de Pareamento Local</span></div>
+<div style="background:#171f33;border-radius:20px;padding:12px;display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:14px;background:#ca8100;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#3e2400">smart_toy</i></div><div style="flex:1"><span style="display:block;font-size:10px;font-weight:800;color:#ffb95f;letter-spacing:1px">VOCÊ ESTÁ VISÍVEL ●</span><span style="font-size:15px;font-weight:800;color:#dae2fd">Lucas (Nível {{ lvl }})</span><span style="display:block;font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f">ID: #TIC-8824 • Host Aberto</span></div><i style="font-size:18px;color:#8c909f">edit</i></div>
+<div style="display:flex;background:#131b2e;padding:6px;border-radius:999px;gap:6px">
+<sc-for list="{{ lobbyTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.onClick }}" style="{{ t.style }}"><i style="font-size:16px">{{ t.icon }}</i>{{ t.name }}</button></sc-for>
+</div>
+<div style="background:#131b2e;border-radius:24px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:8px">
+<div style="position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center"><div style="position:absolute;inset:0;border-radius:999px;background:rgba(77,142,255,.25);animation:ring 2s infinite"></div><div style="width:60px;height:60px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center"><i style="font-size:30px;color:#00285d">{{ lobbyIcon }}</i></div></div>
+<span style="font-size:17px;font-weight:800;color:#dae2fd">● {{ lobbyState }}</span>
+<span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#8c909f">Buscando oponentes na mesma rede local…</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<button onClick="{{ createRoom }}" style="height:74px;border-radius:22px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i style="font-size:22px;color:#3e2400">add_circle</i><span style="font-size:14px;font-weight:900;color:#3e2400">Criar Sala</span><span style="font-size:10px;font-weight:700;color:#653e00">Gerar PIN ou QR</span></button>
+<button onClick="{{ rescan }}" style="height:74px;border-radius:22px;background:#222a3d;box-shadow:0 6px 0 #131b2e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i style="font-size:22px;color:#adc6ff">sync</i><span style="font-size:14px;font-weight:900;color:#dae2fd">Atualizar Lista</span><span style="font-size:10px;font-weight:700;color:#8c909f">Varredura ativa</span></button>
+</div>
+<div style="background:#171f33;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:800;color:#dae2fd">⠿ Digite o Código da Sala</span><span style="font-size:10px;font-weight:700;color:#8c909f">PIN de 4 dígitos</span></div>
+<div style="display:flex;gap:8px;align-items:center">
+<sc-for list="{{ pinCells }}" as="p" hint-placeholder-count="4"><div style="{{ p.style }}">{{ p.ch }}</div></sc-for>
+<button onClick="{{ connectPin }}" style="flex:1;height:44px;border-radius:14px;background:#4d8eff;color:#fff;font-size:13px;font-weight:800">Conectar →</button>
+</div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+<sc-for list="{{ keypad }}" as="k" hint-placeholder-count="10"><button onClick="{{ k.onClick }}" style="height:34px;border-radius:10px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">{{ k.n }}</button></sc-for>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:16px;font-weight:800;color:#dae2fd">Jogadores Próximos <span style="font-size:11px;background:#222a3d;padding:2px 8px;border-radius:999px;color:#c2c6d6">3</span></span><span style="font-size:11px;font-weight:700;color:#10b981">● Sinal Ativo</span></div>
+<sc-for list="{{ peers }}" as="p" hint-placeholder-count="3">
+<div style="background:#171f33;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:10px"><div style="{{ p.iconStyle }}"><i style="font-size:20px;color:#dae2fd">{{ p.icon }}</i></div><div style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:800;color:{{ p.nameColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span><span style="font-size:11px;font-weight:700;color:{{ p.stateColor }}">{{ p.state }} • {{ p.ping }}</span></div><button onClick="{{ p.onClick }}" style="{{ p.btnStyle }}">{{ p.action }}</button></div>
+</sc-for>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;gap:8px"><i style="font-size:18px;color:#8c909f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f;line-height:16px">Certifique-se de que ambos estão conectados na mesma rede Wi-Fi ou com o Bluetooth ativado para pareamento instantâneo.</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLoja }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:linear-gradient(135deg,#1b1740,#131b2e);border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:10px;font-weight:800;color:#ffb95f;letter-spacing:1px">● VISUALIZADOR 3D</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Conjunto Ativo: <b style="color:#dae2fd">{{ skinName }}</b></span></div>
+<div style="align-self:center;width:190px;height:190px;background:#0b1326;border-radius:20px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:6px;padding:10px">
+<sc-for list="{{ preview }}" as="p" hint-placeholder-count="9"><div style="{{ p.style }}">{{ p.mark }}</div></sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11px;font-weight:700;color:#c2c6d6">Tabuleiro: <b style="color:#dae2fd">{{ boardName }}</b><br>Aura: <b style="color:#d0bcff">✧ {{ auraName }}</b></span><button onClick="{{ testSkin }}" style="background:#222a3d;color:#dae2fd;font-size:12px;font-weight:800;padding:10px 14px;border-radius:999px">🎮 Testar Jogada</button></div>
+</div>
+<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">
+<sc-for list="{{ shopTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.name }}</button></sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:17px;font-weight:800;color:#dae2fd">{{ shopTitle }}</span><span style="font-size:11px;font-weight:700;color:#8c909f">{{ itemCount }} Disponíveis</span></div>
+<sc-if value="{{ isMoedas }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ packs }}" as="p" hint-placeholder-count="3">
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #060e20"><div style="{{ p.iconStyle }}"><i style="font-size:24px;color:#dae2fd">{{ p.icon }}</i></div><div style="flex:1"><span style="display:block;font-size:16px;font-weight:900;color:#ffb95f">Ⓢ {{ p.coins }} moedas</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">{{ p.name }} {{ p.bonus }}</span></div><button onClick="{{ p.onClick }}" style="padding:11px 16px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ca8100);color:#3e2400;font-size:13px;font-weight:800">{{ p.price }}</button></div>
+</sc-for>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #060e20"><div style="width:46px;height:46px;border-radius:14px;background:#1e40af;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#adc6ff">bolt</i></div><div style="flex:1"><span style="display:block;font-size:16px;font-weight:900;color:#adc6ff">Recarga de Vidas</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Enche para 10/10 na hora · agora {{ livesText }} · próxima em {{ lifeTimer }}</span></div><button onClick="{{ refillLives }}" style="padding:11px 16px;border-radius:999px;background:#4d8eff;color:#fff;font-size:13px;font-weight:800">Ⓢ 150</button></div>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;gap:8px"><i style="font-size:18px;color:#8c909f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f;line-height:16px">Compras simuladas no protótipo: o crédito entra direto no saldo, sem cobrança real.</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ notMoedas }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ items }}" as="s" hint-placeholder-count="6">
+<div style="{{ s.cardStyle }}">
+<sc-if value="{{ s.equipped }}"><span style="position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;color:#adc6ff;background:#00285d;padding:3px 8px;border-radius:999px">✓ USANDO</span></sc-if>
+<sc-if value="{{ s.isPiece }}"><div style="display:flex;align-items:center;justify-content:center;gap:8px;height:52px"><span style="font-size:26px;font-weight:900;color:{{ s.x }}">✕</span><span style="color:#424754">/</span><span style="font-size:26px;font-weight:900;color:{{ s.o }}">◯</span></div></sc-if>
+<sc-if value="{{ s.isBoard }}"><div style="height:52px;display:flex;align-items:center;justify-content:center"><div style="{{ s.swatchStyle }}"><sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="9"><div style="{{ c.style }}"></div></sc-for></div></div></sc-if>
+<sc-if value="{{ s.isAura }}"><div style="height:52px;display:flex;align-items:center;justify-content:center"><div style="{{ s.swatchStyle }}">✦</div></div></sc-if>
+<span style="font-size:14px;font-weight:800;color:#dae2fd">{{ s.name }}</span>
+<span style="font-size:11px;font-weight:700;color:{{ s.rarityColor }}">{{ s.rarity }}</span>
+<button onClick="{{ s.onClick }}" style="{{ s.btnStyle }}">{{ s.action }}</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:16px;font-weight:800;color:#dae2fd">🎁 Sua Coleção</span><span style="font-size:11px;font-weight:800;color:#3e2400;background:#ffb95f;padding:3px 9px;border-radius:999px">{{ collectionPct }}</span></div>
+<span style="font-size:11px;font-weight:700;color:#c2c6d6">{{ ownedTotal }} de 18 itens desbloqueados · Peças, tabuleiros e auras</span>
+<div style="width:100%;height:10px;border-radius:999px;background:#2d3449;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#ca8100,#ffb95f);width:{{ collectionPct }}"></div></div>
+<span style="font-size:11px;font-weight:700;color:#ffb95f">👑 Bônus Ativo de Conjunto: +5% Moedas / Vitória</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDesafios }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:linear-gradient(135deg,#2a2136,#171f33);border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#ffb95f">military_tech</i></div><div style="flex:1"><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#c2c6d6">TEMPORADA ATIVA</span><span style="font-size:19px;font-weight:800;color:#dae2fd">Desafios &amp; Missões</span></div><span style="font-size:11px;font-weight:800;color:#3e2400;background:#ffb95f;padding:5px 10px;border-radius:999px">{{ missionsDone }}/{{ missionsTotal }} Feitas</span></div>
+<div style="background:#131b2e;border-radius:16px;padding:10px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#dae2fd"><span>Baú Dourado Semanal</span><span style="color:#ffb95f">{{ chestPct }}</span></div><div style="width:100%;height:9px;border-radius:999px;background:#2d3449;margin-top:6px;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#ca8100,#ffb95f);width:{{ chestPct }}"></div></div><span style="font-size:10px;font-weight:700;color:#8c909f">Faltam 3 missões para desbloquear!</span></div><div style="width:44px;height:44px;border-radius:14px;background:#222a3d;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#ffb95f">redeem</i></div></div>
+</div>
+<div style="display:flex;gap:8px;background:#131b2e;padding:6px;border-radius:18px">
+<sc-for list="{{ desafioTabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.name }}<span style="display:block;font-size:9px;font-weight:700;opacity:.7">{{ t.sub }}</span></button></sc-for>
+</div>
+<sc-if value="{{ isTemporada }}" hint-placeholder-val="{{ false }}">
+<div style="background:linear-gradient(135deg,#3a2a12,#171f33);border:1px solid #653e00;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(180deg,#ffddb8,#ca8100);display:flex;align-items:center;justify-content:center;flex:none"><i style="font-size:24px;color:#3e2400">workspace_premium</i></div>
+<div style="flex:1;min-width:0"><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">TEMPORADA 2 · 28 DIAS RESTANTES</span><span style="font-size:16px;font-weight:900;color:#dae2fd">Passe Ouro</span></div>
+</div>
+<span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6;line-height:17px">Libera aura, tabuleiro e peças exclusivas dos níveis 2 a 4.</span>
+<button onClick="{{ buyPass }}" style="width:100%;height:46px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ca8100);color:#3e2400;font-size:13px;font-weight:800">{{ passLabel }}</button>
+</div>
+</sc-if>
+<sc-for list="{{ missions }}" as="m" hint-placeholder-count="3">
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:flex-start;gap:10px"><div style="{{ m.iconStyle }}"><i style="font-size:22px;color:#fff">{{ m.icon }}</i></div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:16px;font-weight:800;color:#dae2fd">{{ m.name }}</span><span style="font-size:11px;font-weight:800;color:#c2c6d6;background:#222a3d;padding:2px 8px;border-radius:999px">{{ m.prog }}</span></div><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6;line-height:17px">{{ m.desc }}</span></div></div>
+<div style="width:100%;height:8px;border-radius:999px;background:#2d3449"><div style="height:100%;border-radius:999px;background:{{ m.barColor }};width:{{ m.pct }}"></div></div>
+<div style="display:flex;align-items:center;gap:8px"><sc-if value="{{ m.hasGold }}"><span style="font-size:11px;font-weight:800;color:#ffb95f;background:#222a3d;padding:4px 10px;border-radius:999px">Ⓢ +{{ m.gold }}</span></sc-if><sc-if value="{{ m.hasXp }}"><span style="font-size:11px;font-weight:800;color:#adc6ff;background:#222a3d;padding:4px 10px;border-radius:999px">✧ +{{ m.xp }} XP</span></sc-if><button onClick="{{ m.onClick }}" style="{{ m.btnStyle }}">{{ m.action }}</button></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:#171f33;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:12px"><div style="width:64px;height:64px;border-radius:999px;background:linear-gradient(135deg,#571bc1,#4d8eff);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #ffb95f"><i style="font-size:34px;color:#dae2fd">face</i></div><div style="flex:1"><span style="display:block;font-size:19px;font-weight:900;color:#dae2fd">Mestre da Trinca <span style="font-size:11px;color:#8c909f">#8492</span></span><span style="font-size:11px;font-weight:800;color:#ffb95f">🏅 Patente: Casual</span><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:11px;font-weight:800;color:#3e2400;background:#ffb95f;padding:2px 8px;border-radius:999px">⚡ Nv. {{ lvl }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">Ⓢ {{ coins }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">🏆 {{ trophies }}</span></div></div></div>
+<div style="background:#131b2e;border-radius:14px;padding:10px"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#c2c6d6"><span>★ PROGRESSO XP</span><span style="color:#ffb95f">{{ xp }} / 2.000 XP ({{ xpPct }})</span></div><div style="width:100%;height:10px;border-radius:999px;background:#2d3449;margin-top:6px;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#ca8100,#ffddb8);width:{{ xpPct }}"></div></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="background:#171f33;border-radius:20px;padding:14px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="width:32px;height:32px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">local_fire_department</i></div><span style="font-size:10px;font-weight:800;color:#ffb95f">FOGO!</span></div><span style="display:block;font-size:30px;font-weight:900;color:#dae2fd;margin-top:6px">{{ streak }}</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Vitórias Seguidas</span></div>
+<div style="background:#171f33;border-radius:20px;padding:14px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="width:32px;height:32px;border-radius:999px;background:#00285d;display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#adc6ff">pie_chart</i></div><span style="font-size:10px;font-weight:800;color:#adc6ff">DESEMPENHO</span></div><span style="display:block;font-size:30px;font-weight:900;color:#dae2fd;margin-top:6px">{{ winRate }}<span style="font-size:15px">%</span></span><span style="font-size:11px;font-weight:700;color:#c2c6d6">Taxa de Vitória</span></div>
+</div>
+<span style="font-size:16px;font-weight:800;color:#dae2fd">📊 Estatísticas de Combate</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4"><div style="background:#171f33;border-radius:18px;padding:12px;display:flex;align-items:center;gap:10px"><div style="{{ s.iconStyle }}"><i style="font-size:18px;color:#dae2fd">{{ s.icon }}</i></div><div><span style="display:block;font-size:20px;font-weight:900;color:{{ s.color }}">{{ s.value }}</span><span style="font-size:11px;font-weight:700;color:#c2c6d6">{{ s.label }}</span></div></div></sc-for>
+</div>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px"><span style="font-size:15px;font-weight:800;color:#dae2fd">🏅 Insígnias em Destaque</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<sc-for list="{{ badges }}" as="b" hint-placeholder-count="4"><div style="{{ b.style }}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="{{ b.iconStyle }}"><i style="font-size:18px;color:#dae2fd">{{ b.icon }}</i></div><span style="font-size:9px;font-weight:800;color:{{ b.tierColor }}">{{ b.tier }}</span></div><span style="display:block;font-size:13px;font-weight:800;color:#dae2fd;margin-top:6px">{{ b.name }}</span><span style="font-size:10px;font-weight:700;color:#8c909f">{{ b.desc }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isConfig }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:10px"><button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#dae2fd">arrow_back</i></button><span style="font-size:20px;font-weight:900;color:#dae2fd">Configurações</span></div>
+<div><span style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#ffb95f">PAINEL DE CONTROLE</span><h2 style="margin:2px 0 0;font-size:26px;font-weight:900;color:#dae2fd">Preferências</h2><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#8c909f">Personalize som, vibração e dinâmica arcade</span></div>
+<sc-for list="{{ settings }}" as="g" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:#c2c6d6">{{ g.title }}</span>
+<sc-for list="{{ g.items }}" as="s" hint-placeholder-count="3">
+<sc-if value="{{ s.isSwitch }}"><div style="background:#171f33;border-radius:18px;padding:12px;display:flex;align-items:center;gap:12px"><div style="{{ s.iconStyle }}"><i style="font-size:18px;color:#dae2fd">{{ s.icon }}</i></div><div style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:800;color:#dae2fd">{{ s.name }}</span><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">{{ s.desc }}</span></div><button onClick="{{ s.onClick }}" style="{{ s.switchStyle }}"><span style="{{ s.knobStyle }}"></span></button></div></sc-if>
+<sc-if value="{{ s.isSlider }}"><div style="background:#131b2e;border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-top:-4px"><i style="font-size:18px;color:#8c909f">volume_up</i><span style="font-size:11px;font-weight:700;color:#c2c6d6;white-space:nowrap">{{ s.name }}</span><input type="range" min="0" max="100" step="5" value="{{ s.value }}" onChange="{{ s.onChange }}" style="{{ s.sliderStyle }}"><span style="font-size:12px;font-weight:800;color:{{ s.accent }};width:38px;text-align:right">{{ s.valueText }}</span></div></sc-if>
+</sc-for>
+</div>
+</sc-for>
+<button onClick="{{ resetSave }}" style="width:100%;height:50px;border-radius:16px;background:#222a3d;color:#ffb4ab;font-size:14px;font-weight:800">↺ Zerar Progresso Salvo</button>
+<div style="text-align:center;font-size:10px;font-weight:700;color:#424754;line-height:16px">Jogo da Velha Arcade • v1.4.2 (Build 240)<br>Desenvolvido com carinho para partidas memoráveis</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;right:0;bottom:0;height:72px;background:rgba(11,19,38,.92);backdrop-filter:blur(12px);border-top:1px solid #1c2338;display:flex;align-items:center;justify-content:space-around;padding:0 12px;z-index:30">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+<button onClick="{{ n.onClick }}" style="{{ n.style }}"><i style="font-size:22px">{{ n.icon }}</i><span style="font-size:11px;font-weight:800">{{ n.name }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ showConfetti }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;pointer-events:none;z-index:45;overflow:hidden">
+<sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0"><div style="{{ c.style }}"></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalPause }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.82);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px">
+<div style="width:100%;background:#1b2237;border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:12px;animation:pop .25s cubic-bezier(.34,1.56,.64,1)">
+<span style="text-align:center;font-size:24px;font-weight:900;color:#dae2fd">JOGO PAUSADO</span>
+<span style="text-align:center;font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6">A partida está congelada. Respire fundo!</span>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#c2c6d6"><span>⚙ MODO</span><span style="color:#dae2fd">{{ botName }}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#c2c6d6"><span>🗓 PLACAR ATUAL</span><span style="color:#ffb95f">Você {{ scoreP1 }} × {{ scoreP2 }} Bot</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#c2c6d6"><span>🕐 TEMPO PAUSADO</span><span style="color:#dae2fd">{{ elapsedText }}</span></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#c2c6d6"><span>⚐ STATUS DA VEZ</span><span style="color:#ffb4ab;background:#93000a;padding:2px 8px;border-radius:999px">{{ turnLabel }}</span></div>
+</div>
+<span style="font-size:11px;font-weight:800;letter-spacing:1px;color:#c2c6d6">AJUSTE RÁPIDO</span>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<sc-for list="{{ quickToggles }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.onClick }}" style="{{ q.style }}"><i style="font-size:22px">{{ q.icon }}</i><span style="font-size:11px;font-weight:800">{{ q.name }}</span></button></sc-for>
+</div>
+<button onClick="{{ resume }}" style="width:100%;height:58px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;font-size:18px;font-weight:900;color:#3e2400">▶ CONTINUAR JOGANDO</button>
+<button onClick="{{ restart }}" style="width:100%;height:52px;border-radius:999px;background:#2d3449;color:#dae2fd;font-size:15px;font-weight:800">↻ REINICIAR PARTIDA</button>
+<button onClick="{{ goConfig }}" style="width:100%;height:52px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:15px;font-weight:800">⚙ OPÇÕES &amp; CONFIGURAÇÕES</button>
+<button onClick="{{ abandon }}" style="width:100%;height:52px;border-radius:999px;background:#3a1418;color:#ffb4ab;font-size:15px;font-weight:800">⇥ ABANDONAR PARTIDA</button>
+<span style="text-align:center;font-size:10px;font-weight:700;color:#8c909f">A desistência contabilizará como derrota</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalWin }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.85);z-index:55;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border:1px solid #ca8100;border-radius:30px;padding:18px;display:flex;flex-direction:column;gap:12px;animation:pop .3s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 60px rgba(202,129,0,.35)">
+<div style="display:flex;justify-content:center;position:relative"><div style="width:86px;height:86px;border-radius:999px;border:2px solid #ffb95f;display:flex;align-items:center;justify-content:center;background:#131b2e"><i style="font-size:46px;color:#ffb95f">emoji_events</i></div><button onClick="{{ closeModal }}" style="position:absolute;right:0;top:0;width:36px;height:36px;border-radius:999px;background:#2d3449;color:#dae2fd;font-size:16px">✕</button></div>
+<div style="align-self:center;background:#653e00;color:#ffddb8;font-size:11px;font-weight:800;padding:5px 14px;border-radius:999px;letter-spacing:1px">👑 PARTIDA VENCIDA</div>
+<h2 style="margin:0;text-align:center;font-size:30px;font-weight:900;color:#dae2fd;letter-spacing:-.5px">VITÓRIA ÉPICA!</h2>
+<p style="margin:0;text-align:center;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:#c2c6d6">{{ winSubtitle }}</p>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><div style="width:38px;height:38px;border-radius:999px;border:1px solid #ffb95f;display:flex;align-items:center;justify-content:center;color:#ffb4ab;font-size:16px;font-weight:900">✕</div><div><span style="display:block;font-size:10px;font-weight:800;color:#ffb95f">VENCEDOR</span><span style="font-size:14px;font-weight:800;color:#dae2fd">Você</span></div></div><div style="background:#222a3d;padding:8px 16px;border-radius:999px;font-size:18px;font-weight:900;color:#dae2fd">{{ scoreP1 }} <span style="font-size:12px;color:#8c909f">×</span> <span style="color:#d0bcff">{{ scoreP2 }}</span></div><div style="display:flex;align-items:center;gap:8px"><div style="text-align:right"><span style="display:block;font-size:10px;font-weight:800;color:#8c909f">Derrotado</span><span style="font-size:14px;font-weight:800;color:#dae2fd">Bot</span></div><div style="width:38px;height:38px;border-radius:999px;border:1px solid #571bc1;display:flex;align-items:center;justify-content:center;color:#d0bcff;font-size:16px;font-weight:900">◯</div></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+<div style="background:#131b2e;border:1px solid #653e00;border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px"><i style="font-size:24px;color:#ffb95f">monetization_on</i><span style="font-size:16px;font-weight:900;color:#ffb95f">+{{ rewardCoins }}</span><span style="font-size:9px;font-weight:800;color:#8c909f">MOEDAS</span></div>
+<div style="background:#131b2e;border:1px solid #00285d;border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px"><i style="font-size:24px;color:#adc6ff">auto_awesome</i><span style="font-size:16px;font-weight:900;color:#adc6ff">+{{ rewardXp }} XP</span><span style="font-size:9px;font-weight:800;color:#8c909f">NÍVEL {{ lvl }}</span></div>
+<div style="background:#131b2e;border:1px solid #93000a;border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px"><i style="font-size:24px;color:#ffb4ab">local_fire_department</i><span style="font-size:16px;font-weight:900;color:#ffb4ab">{{ streak }}x Streak</span><span style="font-size:9px;font-weight:800;color:#8c909f">BÔNUS</span></div>
+</div>
+<div style="background:#131b2e;border-radius:14px;padding:10px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:#dae2fd"><span>⚡ Progresso de Nível</span><span style="color:#ffb95f">{{ xp }} / 2.000 XP</span></div><div style="width:100%;height:10px;border-radius:999px;background:#2d3449;margin-top:6px;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#ca8100,#ffddb8);width:{{ xpPct }}"></div></div></div>
+<button onClick="{{ nextPhase }}" style="width:100%;height:58px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;font-size:19px;font-weight:900;color:#3e2400;letter-spacing:.5px">{{ nextLabel }} →</button>
+<div style="display:flex;gap:10px"><button onClick="{{ restart }}" style="flex:1;height:50px;border-radius:999px;background:#2d3449;color:#dae2fd;font-size:14px;font-weight:800">↺ Revanche</button><button onClick="{{ closeModal }}" style="flex:1;height:50px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">👁 Ver Tabuleiro</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalLose }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.85);z-index:55;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">
+<div style="align-self:center;background:#571bc1;color:#e9ddff;font-size:12px;font-weight:800;padding:6px 16px;border-radius:999px">☹ A IA LEVOU ESSA!</div>
+<h2 style="margin:0;text-align:center;font-size:30px;font-weight:900;color:#dae2fd">Quase Lá!</h2>
+<p style="margin:0;text-align:center;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:#c2c6d6;line-height:19px">O {{ botName }} alinhou 3 símbolos no cantinho. Que tal uma revanche rápida para virar o placar?</p>
+<div style="background:#131b2e;border-radius:14px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);text-align:center">
+<div><span style="display:block;font-size:10px;font-weight:800;color:#8c909f">MOVIMENTOS</span><span style="font-size:16px;font-weight:900;color:#dae2fd">{{ moves }}</span></div>
+<div style="border-left:1px solid #2d3449;border-right:1px solid #2d3449"><span style="display:block;font-size:10px;font-weight:800;color:#8c909f">TEMPO</span><span style="font-size:16px;font-weight:900;color:#dae2fd">{{ elapsedShort }}</span></div>
+<div><span style="display:block;font-size:10px;font-weight:800;color:#ffb95f">CONSOLAÇÃO</span><span style="font-size:16px;font-weight:900;color:#ffb95f">+{{ rewardCoins }}</span></div>
+</div>
+<button onClick="{{ restart }}" style="width:100%;height:58px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;font-size:19px;font-weight:900;color:#3e2400">↺ TENTAR DE NOVO</button>
+<button onClick="{{ goModos }}" style="width:100%;height:52px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:15px;font-weight:800">⚙ MUDAR NÍVEL</button>
+<button onClick="{{ goHome }}" style="width:100%;height:44px;border-radius:999px;background:transparent;color:#c2c6d6;font-size:13px;font-weight:800">⌂ MENU PRINCIPAL</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalDraw }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.85);z-index:55;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">
+<div style="align-self:center;background:linear-gradient(180deg,#ffddb8,#ffb95f);color:#3e2400;font-size:12px;font-weight:900;padding:6px 18px;border-radius:999px">🤝 DEU VELHA! 🤝</div>
+<div style="display:flex;justify-content:center;gap:-10px;padding:6px 0"><div style="width:76px;height:76px;border-radius:999px;background:#ffb95f;display:flex;align-items:center;justify-content:center;font-size:30px">😐</div><div style="width:76px;height:76px;border-radius:999px;background:#adc6ff;display:flex;align-items:center;justify-content:center;font-size:30px;margin-left:-14px">😐</div></div>
+<h2 style="margin:0;text-align:center;font-size:26px;font-weight:900;color:#dae2fd">Empate Épico!</h2>
+<p style="margin:0;text-align:center;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:600;color:#c2c6d6">Essa foi por pouco! Ninguém cedeu espaço no tabuleiro.</p>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:22px;color:#ffb95f">monetization_on</i></div><div><span style="display:block;font-size:10px;font-weight:800;color:#8c909f">RECOMPENSA</span><span style="font-size:18px;font-weight:900;color:#ffb95f">+{{ rewardCoins }} MOEDAS</span></div></div><span style="font-size:12px;font-weight:800;color:#dae2fd;background:#222a3d;padding:6px 12px;border-radius:999px">🛡 +{{ rewardXp }} XP</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+<div style="background:#131b2e;border-radius:14px;padding:10px;text-align:center"><i style="font-size:20px;color:#adc6ff">grid_view</i><span style="display:block;font-size:16px;font-weight:900;color:#dae2fd">9 / 9</span><span style="font-size:10px;font-weight:700;color:#8c909f">Jogadas</span></div>
+<div style="background:#131b2e;border-radius:14px;padding:10px;text-align:center"><i style="font-size:20px;color:#d0bcff">timer</i><span style="display:block;font-size:16px;font-weight:900;color:#dae2fd">{{ elapsedShort }}</span><span style="font-size:10px;font-weight:700;color:#8c909f">Duração</span></div>
+<div style="background:#131b2e;border-radius:14px;padding:10px;text-align:center"><i style="font-size:20px;color:#ffb95f">verified</i><span style="display:block;font-size:16px;font-weight:900;color:#dae2fd">100%</span><span style="font-size:10px;font-weight:700;color:#8c909f">Defesa</span></div>
+</div>
+<button onClick="{{ restart }}" style="width:100%;height:58px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;font-size:18px;font-weight:900;color:#3e2400">↺ JOGAR NOVAMENTE</button>
+<button onClick="{{ closeModal }}" style="width:100%;height:50px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">👁 VER TABULEIRO</button>
+<button onClick="{{ goHome }}" style="width:100%;height:42px;border-radius:999px;background:transparent;color:#c2c6d6;font-size:13px;font-weight:800">VOLTAR AO MENU</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:96px;z-index:60;background:#222a3d;border-radius:16px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;animation:drop .2s ease-out"><i style="font-size:20px;color:#ffb95f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;color:#dae2fd">{{ toastText }}</span></div>
+</sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:900},&quot;turnSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:15,&quot;min&quot;:5,&quot;max&quot;:30,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogabilidade&quot;},&quot;botThinkMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:600,&quot;min&quot;:100,&quot;max&quot;:1500,&quot;step&quot;:50,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogabilidade&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const def={coins:0,trophies:0,xp:0,level:1,lives:10,volSfx:80,volMenu:25,volGame:45,pass:false,lifeAt:0,resetV3:true,streak:0,wins:0,losses:0,draws:0,games:0,phase:1,skin:'neon',owned:['neon','chama'],sfx:true,music:true,audioMigrated:2,haptics:true,confirm:false,particles:true,nDaily:true,nLives:true,nSeason:false,m1:0,m2:0,m3:0,daily:0,board:'classico',aura:'brilho',ownedBoards:['classico','oceano'],ownedAuras:['nenhuma','brilho']};
+    let save=def;
+    try{
+      const r=localStorage.getItem('jdv_arcade_v1');
+      if(r){
+        save=Object.assign({},def,JSON.parse(r));
+        if(save.resetV3!==true){save=Object.assign({},def,{music:true,sfx:true,audioMigrated:2,resetV3:true,volSfx:save.volSfx||def.volSfx,volMenu:save.volMenu||def.volMenu,volGame:save.volGame||def.volGame,haptics:save.haptics,particles:save.particles});}
+        const free={owned:['neon','chama'],ownedBoards:['classico','oceano'],ownedAuras:['nenhuma','brilho']};
+        Object.keys(free).forEach(k=>{const cur=Array.isArray(save[k])?save[k]:[];save[k]=cur.concat(free[k].filter(id=>cur.indexOf(id)<0));});
+        if(save.audioMigrated!==2){save.music=true;save.sfx=true;save.audioMigrated=2;
+          if(!(save.volMenu>0))save.volMenu=def.volMenu;
+          if(!(save.volGame>0))save.volGame=def.volGame;
+          if(!(save.volSfx>0))save.volSfx=def.volSfx;
+        }
+        try{localStorage.setItem('jdv_arcade_v1',JSON.stringify(save));}catch(e2){}
+      }
+    }catch(e){}
+    this.state={save,screen:'home',mode:'bot',diff:'medio',fmt:'bot',starter:'voce',bestOf:'1',board:Array(9).fill(null),turn:'X',lock:false,win:null,result:null,moves:0,elapsed:0,turnTime:15,hints:3,scoreP1:0,scoreP2:0,phasePlay:null,modal:null,ready:null,confetti:[],toast:null,shopTab:'pecas',dTab:'diarias',duelTab:'mesa',lobbyTab:'wifi',clock:'15s',pin:'',reactionShown:'',rewardCoins:0,rewardXp:0,flip:true,hintCell:null};
+  }
+  componentDidMount(){
+    this.t=setInterval(()=>{
+      const s=this.state;
+      if((s.screen==='match'||s.screen==='duel')&&!s.result&&!s.modal&&!s.ready){
+        const e=s.elapsed+1;
+        if(s.clock==='Livre'||s.lock){this.setState({elapsed:e});return;}
+        const tt=s.turnTime-1;
+        if(tt<=0){this.setState({elapsed:e,turnTime:this.secs()});this.auto();}
+        else this.setState({elapsed:e,turnTime:tt});
+      }
+    },1000);
+    this.lt=setInterval(()=>{
+      const sv=this.state.save,now=Date.now();
+      if(sv.lives>=10)return;
+      if(!sv.lifeAt||sv.lifeAt<now-3e6){this.put({lifeAt:now+this.RECHARGE});return;}
+      if(now>=sv.lifeAt){const l=sv.lives+1;this.put({lives:l,lifeAt:l>=10?0:now+this.RECHARGE});if(sv.nLives)this.say('⚡ Vida recarregada: '+l+'/10');}
+      else this.setState({now});
+    },1000);
+    this.audio=this.audio||{};
+    this.buf=this.buf||{};this.src=this.src||{};
+    if(window.__jdvTimers)window.__jdvTimers.forEach(id=>clearInterval(id));
+    window.__jdvTimers=[];
+    if(window.__jdvUnlock)['pointerdown','touchend','click','keydown'].forEach(ev=>document.removeEventListener(ev,window.__jdvUnlock,true));
+    this.initWA();
+    this.applyVolumes();
+    this.tryAutoplay();
+    const unlock=()=>this.unlock();
+    this._unlock=unlock;
+    window.__jdvUnlock=unlock;
+    ['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,unlock,true));
+    this.rt=setInterval(()=>{
+      if(!this.owns()||!this.state.save.music)return;
+      const st=this.attach();
+      if(st){if(st.ac.state==='suspended')st.ac.resume().catch(()=>{});if(!st.music||st.zone!==this.wantKey())this.waPlayMusic();return;}
+      if(!this.unlocked)return;
+      const t=this.track();
+      if(t&&this.stalled(t))this.hardStart(t);
+    },2000);
+    window.__jdvTimers.push(this.rt,this.t,this.lt);
+  }
+  FILES(){return {game:'musica para quando a partida começar.mp3',transition:'Menu-to-Game.mp3',ready:'Tá Pronto_ Já.mp3',win:'Vitória no Show de Bola.mp3',lose:'A Máquina Levou Essa.mp3',draw:'Deu Velha! Empate Técnico!.mp3'};}
+  initWA(){
+    this.uid=(window.__jdvUid=(window.__jdvUid||0)+1);
+    if(window.__jdvAudio){this.waStopMusic();this.attach();this.applyGains();return;}
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+      const ac=new AC();
+      const gMusic=ac.createGain();gMusic.connect(ac.destination);
+      const gSfx=ac.createGain();gSfx.connect(ac.destination);
+      const store={ac,gMusic,gSfx,buf:{},music:null,key:null,owner:this.uid};
+      window.__jdvAudio=store;
+      this.wa=ac;this.ac=ac;this.gMusic=gMusic;this.gSfx=gSfx;this.buf=store.buf;this.src=store;
+      this.applyGains();
+      const F=this.FILES();
+      Object.keys(F).forEach(k=>{
+        fetch('uploads/'+encodeURIComponent(F[k]))
+          .then(r=>r.arrayBuffer())
+          .then(b=>new Promise((res,rej)=>{const p=ac.decodeAudioData(b,res,rej);if(p&&p.then)p.then(res,rej);}))
+          .then(buf=>{store.buf[k]=buf;if(this.state.save.music&&this.owns()&&!store.music)this.waPlayMusic();})
+          .catch(()=>{});
+      });
+    }catch(e){}
+  }
+  applyGains(){
+    const sv=this.state.save;
+    if(this.gMusic){const inMatch=this.state.screen==='match'||this.state.screen==='duel';this.gMusic.gain.value=Math.max(0,(inMatch?sv.volGame:sv.volMenu)/100);}
+    if(this.gSfx)this.gSfx.gain.value=Math.max(0,sv.volSfx/100);
+  }
+  wantKey(){return (this.state.screen==='match'||this.state.screen==='duel')?'game':'menu';}
+  owns(){const st=window.__jdvAudio;return !!st&&st.owner===this.uid;}
+  attach(){
+    const st=window.__jdvAudio;if(!st)return null;
+    if(this.wa!==st.ac){this.wa=st.ac;this.ac=st.ac;this.gMusic=st.gMusic;this.gSfx=st.gSfx;this.buf=st.buf;this.src=st;}
+    if(!this.uid){this.uid=(window.__jdvUid=(window.__jdvUid||0)+1);}
+    st.owner=this.uid;
+    return st;
+  }
+  waPlayMusic(){
+    const st=this.attach();if(!st)return;
+    const ac=this.wa;if(!ac)return;
+    if(ac.state==='suspended'){ac.resume().then(()=>this.waPlayMusic()).catch(()=>{});return;}
+    const zone=this.wantKey();
+    if(st.music&&st.zone===zone)return;
+    this.waStopMusic();
+    if(zone==='game'){this.startTrack('game',true,'game');return;}
+    this.startTrack('transition',true,'menu');
+  }
+  startTrack(key,loop,zone){
+    const st=this.attach(),ac=this.wa;if(!ac||!st)return;
+    if(st.starting)return;
+    const buf=st.buf[key];if(!buf)return;
+    st.starting=true;
+    if(st.music){try{st.music.onended=null;st.music.stop();}catch(e){}try{st.music.disconnect();}catch(e){}st.music=null;}
+    const s=ac.createBufferSource();s.buffer=buf;s.loop=!!loop;s.connect(this.gMusic);
+    try{s.start(0);}catch(e){st.starting=false;return;}
+    st.music=s;st.key=key;st.zone=zone;st.starting=false;
+    s.onended=()=>{
+      if(st.music!==s)return;
+      st.music=null;st.key=null;st.zone=null;
+      if(!this.owns()||!this.state.save.music)return;
+      this.waPlayMusic();
+    };
+  }
+  waStopMusic(){const st=window.__jdvAudio;if(!st)return;if(st.music){try{st.music.onended=null;st.music.stop();}catch(e){}try{st.music.disconnect();}catch(e){}}st.music=null;st.key=null;st.zone=null;this.stopBridge();}
+  stopBridge(){const st=window.__jdvAudio;if(!st||!st.sfx||!st.sfx.transition)return;try{st.sfx.transition.stop();}catch(e){}st.sfx.transition=null;}
+  playBridge(){return false;}
+  MENU_LIST(){return ['transition'];}
+  waCue(k){
+    const st=this.attach();if(!st)return false;
+    const now=Date.now();st.last=st.last||{};
+    if(st.last[k]&&now-st.last[k]<400)return true;
+    st.last[k]=now;
+    const ac=this.wa,buf=st&&st.buf[k];if(!ac||!buf)return false;
+    if(st.sfx&&st.sfx[k]){try{st.sfx[k].stop();}catch(e){}}
+    st.sfx=st.sfx||{};
+    if(ac.state==='suspended')ac.resume().catch(()=>{});
+    const s=ac.createBufferSource();s.buffer=buf;s.connect(st.gSfx);
+    try{s.start(0);}catch(e){return false;}
+    st.sfx[k]=s;s.onended=()=>{if(st.sfx[k]===s)st.sfx[k]=null;};
+    return true;
+  }
+  unlock(){
+    this.unlocked=true;
+    if(this.wa&&this.wa.state==='suspended')this.wa.resume().catch(()=>{});
+    if(!this.state.save.music)return;
+    if(this.attach()){this.syncMusic();return;}
+    const t=this.track();
+    if(t&&this.stalled(t))this.hardStart(t);
+  }
+  tryAutoplay(){
+    if(!this.state.save.music)return;
+    if(this.wa){this.waPlayMusic();return;}
+    const a=this.audio;if(a&&a.menu)this.kick(a.menu);
+  }
+  kick(t){
+    if(!t)return;
+    const p=t.play();
+    if(p&&p.catch)p.catch(()=>{this.unlocked=false;this.park(t);});
+    clearTimeout(this['_k'+(t.dataset?t.dataset.k:'')]);
+    setTimeout(()=>{
+      if(t.currentTime>0&&!t.paused){this.unlocked=true;return;}
+      this.unlocked=false;this.park(t);
+    },600);
+  }
+  park(t){try{t.pause();t.currentTime=0;}catch(e){}}
+  hardStart(t){
+    if(!t)return;
+    try{t.pause();t.currentTime=0;t.load();}catch(e){}
+    const p=t.play();
+    if(p&&p.catch)p.catch(()=>{this.unlocked=false;this.park(t);});
+    setTimeout(()=>{if(t.currentTime>0&&!t.paused)this.unlocked=true;else{this.unlocked=false;this.park(t);}},500);
+  }
+  track(){const a=this.audio;if(!a)return null;return (this.state.screen==='match'||this.state.screen==='duel')?a.game:a.menu;}
+  stalled(t){return !t||t.currentTime===0||t.paused;}
+  get RECHARGE(){return 300000;}
+  componentWillUnmount(){clearInterval(this.t);clearInterval(this.lt);clearInterval(this.rt);this.stopMusic();if(this._unlock)['pointerdown','touchend','click','keydown'].forEach(ev=>document.removeEventListener(ev,this._unlock,true));}
+  bind(key){return (el)=>{
+    if(!el)return;
+    this.audio=this.audio||{};
+    if(this.audio[key]===el)return;
+    this.audio[key]=el;
+    this.applyVolumes();
+    if(key==='menu')this.tryAutoplay();
+  };}
+  componentDidUpdate(){if(!this.owns())return;this.applyVolumes();this.syncMusic();}
+  applyVolumes(){this.audioVols(this.state.save);}
+  syncMusic(){
+    this.attach();
+    if(this.wa){
+      this.applyGains();
+      if(!this.state.save.music){this.waStopMusic();return;}
+      const st=window.__jdvAudio;
+      if(!st||!st.music||st.zone!==this.wantKey())this.waPlayMusic();
+      return;
+    }
+    const a=this.audio;if(!a||!this.unlocked)return;
+    const sv=this.state.save,inMatch=this.state.screen==='match'||this.state.screen==='duel';
+    const want=!sv.music?null:(inMatch?a.game:a.menu);
+    [a.menu,a.game].forEach(t=>{if(t&&t!==want&&!t.paused){t.pause();t.currentTime=0;}});
+    if(want&&this.stalled(want)){const p=want.play();if(p&&p.catch)p.catch(()=>{this.unlocked=false;});return p;}
+  }
+  stopMusic(){this.waStopMusic();const a=this.audio;if(!a)return;[a.menu,a.game].forEach(t=>{if(t){t.pause();t.currentTime=0;}});}
+  cue(k){
+    if(!this.state.save.sfx||!this.owns())return;
+    if(this.waCue(k))return;
+    const a=this.audio;if(!a||!a[k])return;
+    const el=a[k];
+    try{el.muted=this.state.save.volSfx<=0;el.volume=Math.max(0,Math.min(1,this.state.save.volSfx/100));el.currentTime=0;const p=el.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}
+  }
+  spark(i){if(!this.state.save.particles)return;this.setState({sparkAt:i});clearTimeout(this._sp);this._sp=setTimeout(()=>this.setState({sparkAt:null}),480);}
+  secs(){return this.state&&this.state.clock==='10s'?10:(this.props.turnSeconds??15);}
+  put(patch){const s=Object.assign({},this.state.save,patch);try{localStorage.setItem('jdv_arcade_v1',JSON.stringify(s));}catch(e){}this.setState({save:s});return s;}
+  beep(f,d,type){if(!this.state.save.sfx)return;try{this.ac=this.ac||new (window.AudioContext||window.webkitAudioContext)();const o=this.ac.createOscillator(),g=this.ac.createGain();o.type=type||'triangle';o.frequency.value=f;const gv=.12*Math.pow(Math.max(0,this.state.save.volSfx)/100,2);if(gv<=0)return;g.gain.value=gv;o.connect(g);g.connect(this.ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,this.ac.currentTime+d);o.stop(this.ac.currentTime+d);}catch(e){}}
+  fanfare(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.beep(f,.22,'square'),i*130));}
+  buzz(ms){if(this.state.save.haptics&&navigator.vibrate)navigator.vibrate(ms);}
+  say(text){this.setState({toast:text});clearTimeout(this._tt);this._tt=setTimeout(()=>this.setState({toast:null}),2200);}
+  L(){return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];}
+  check(b){for(const l of this.L()){if(b[l[0]]&&b[l[0]]===b[l[1]]&&b[l[1]]===b[l[2]])return {who:b[l[0]],line:l};}return b.every(Boolean)?{who:'draw',line:null}:null;}
+  mm(b,p,me,d){const w=this.check(b);if(w)return {s:w.who==='draw'?0:(w.who===me?10-d:d-10)};let best=null;for(let i=0;i<9;i++){if(b[i])continue;b[i]=p;const s=this.mm(b,p==='X'?'O':'X',me,d+1).s;b[i]=null;if(!best||(p===me?s>best.s:s<best.s))best={s,i};}return best||{s:0};}
+  empties(b){const a=[];for(let i=0;i<9;i++)if(!b[i])a.push(i);return a;}
+  tactic(b,me){const foe=me==='X'?'O':'X';for(const t of [me,foe])for(const l of this.L()){const v=l.map(i=>b[i]);if(v.filter(x=>x===t).length===2&&v.includes(null))return l[v.indexOf(null)];}if(!b[4])return 4;const c=[0,2,6,8].filter(i=>!b[i]);if(c.length)return c[Math.floor(Math.random()*c.length)];const e=this.empties(b);return e[Math.floor(Math.random()*e.length)];}
+  pick(b,me,diff){const e=this.empties(b);if(!e.length)return null;if(diff==='facil')return Math.random()<.65?e[Math.floor(Math.random()*e.length)]:this.tactic(b,me);if(diff==='medio')return Math.random()<.15?e[Math.floor(Math.random()*e.length)]:this.tactic(b,me);if(diff==='dificil')return Math.random()<.15?this.tactic(b,me):this.mm(b.slice(),me,me,0).i;return this.mm(b.slice(),me,me,0).i;}
+  go(s){this.setState({screen:s,modal:null});this.beep(620,.05);}
+  start(opts){
+    const o=opts||{};const s=this.state.save;
+    const isSolo=(o.mode||'bot')!=='local';
+    if(isSolo&&s.lives<=0){this.say('Sem vidas! Próxima em '+this.lifeText()+'.');return;}
+    const first=this.state.starter==='robo'?'O':(this.state.starter==='sorteio'&&Math.random()<.5?'O':'X');
+    this.setState({screen:o.mode==='local'||o.mode==='online'?'duel':'match',mode:o.mode||'bot',diff:o.diff||this.state.diff,phasePlay:o.phase||null,board:Array(9).fill(null),turn:'X',result:null,win:null,moves:0,elapsed:0,turnTime:this.secs(),hints:3,lock:true,modal:null,ready:'PRONTO?',confetti:[],hintCell:null});
+    this.cue('ready');
+    setTimeout(()=>this.setState({ready:'JÁ!'}),900);
+    setTimeout(()=>{this.setState({ready:null,lock:false});if(first==='O'&&(o.mode||'bot')!=='local'){this.setState({turn:'O',lock:true});setTimeout(()=>this.bot(),400);}},1800);
+  }
+  play(i){
+    const s=this.state;
+    if(s.lock||s.result||s.ready||s.board[i])return;
+    const b=s.board.slice();b[i]=s.turn;this.buzz(14);this.beep(s.turn==='X'?540:420,.08);this.spark(i);
+    const w=this.check(b),moves=s.moves+1;
+    if(w)return this.finish(b,w,moves);
+    const next=s.turn==='X'?'O':'X';
+    this.setState({board:b,turn:next,moves,turnTime:this.secs(),hintCell:null});
+    if(s.mode!=='local'){this.setState({lock:true});setTimeout(()=>this.bot(),this.props.botThinkMs??600);}
+  }
+  bot(){
+    const s=this.state;if(s.result)return;
+    const b=s.board.slice();const i=this.pick(b,'O',s.diff);
+    if(i==null){this.setState({lock:false});return;}
+    b[i]='O';this.beep(420,.08);this.spark(i);
+    const w=this.check(b),moves=s.moves+1;
+    if(w)return this.finish(b,w,moves);
+    this.setState({board:b,turn:'X',lock:false,moves,turnTime:this.secs()});
+  }
+  auto(){const s=this.state;if(s.lock)return;const e=this.empties(s.board);if(e.length)this.play(e[Math.floor(Math.random()*e.length)]);}
+  finish(b,w,moves){
+    const s=this.state;
+    this.setState({board:b,win:w,result:w.who,moves,lock:true});
+    const local=s.mode==='local';
+    let res=w.who==='draw'?'draw':(w.who==='X'?'win':'lose');
+    const p1=s.scoreP1+(res==='win'?1:0),p2=s.scoreP2+(res==='lose'?1:0);
+    const sv=s.save;let patch={games:sv.games+1};let coins=0,xp=0;
+    if(res==='win'){coins=s.phasePlay?120:100;xp=s.phasePlay?200:150;patch.wins=sv.wins+1;
+      if(w.line&&w.line[1]===4&&(w.line[0]===0||w.line[0]===2))patch.acDiag=(sv.acDiag||0)+1;
+      if(s.diff==='insano')patch.acInsano=(sv.acInsano||0)+1;patch.streak=sv.streak+1;patch.trophies=sv.trophies+5;patch.daily=Math.min(1,(sv.daily||0)+1);patch.m1=Math.min(1,sv.m1+1);patch.m2=Math.min(3,sv.m2+1);
+      if(s.phasePlay&&s.phasePlay===sv.phase)patch.phase=Math.min(10,sv.phase+1);}
+    else if(res==='lose'){coins=5;xp=5;patch.losses=sv.losses+1;patch.streak=0;
+      if(s.mode!=='local'){patch.lives=Math.max(0,sv.lives-1);patch.lifeAt=sv.lifeAt&&sv.lives<10?sv.lifeAt:Date.now()+this.RECHARGE;}}
+    else{coins=10;xp=2;patch.draws=sv.draws+1;}
+    patch.coins=sv.coins+coins;patch.xp=sv.xp+xp;
+    if(patch.xp>=2000){patch.xp=patch.xp-2000;patch.level=sv.level+1;}
+    this.put(patch);
+    this.setState({scoreP1:p1,scoreP2:p2,rewardCoins:coins,rewardXp:xp});
+    this.cue(res);
+    if(res==='win'){this.buzz([30,60,30]);if(this.state.save.particles)this.setState({confetti:this.makeConfetti()});}
+    else if(res==='lose')this.buzz(120);
+    setTimeout(()=>{if(!local)this.setState({modal:res});else this.setState({modal:res==='draw'?'draw':(res==='win'?'win':'lose')});},1100);
+  }
+  makeConfetti(){const cols=['#ffb95f','#adc6ff','#d0bcff','#ffb4ab','#ffddb8','#4d8eff'];const a=[];for(let i=0;i<46;i++){const w=5+Math.random()*8;a.push({style:'position:absolute;top:-20px;left:'+(Math.random()*100)+'%;width:'+w+'px;height:'+(w*(Math.random()>.5?1:1.8))+'px;border-radius:'+(Math.random()>.6?'999px':'2px')+';background:'+cols[i%6]+';animation:conf '+(1.8+Math.random()*1.8)+'s linear '+(Math.random()*.9)+'s forwards'});}return a;}
+  skinDefs(){return [
+    {id:'neon',name:'Neon Arcade',rarity:'Raridade Rara',rc:'#adc6ff',x:'#adc6ff',o:'#ffb95f',xs:'#1e40af',os:'#8a5a00',price:0},
+    {id:'chama',name:'Chama Vulcânica',rarity:'Épico • Desbloqueado',rc:'#ffb95f',x:'#fb923c',o:'#ef4444',xs:'#7c2d12',os:'#7f1d1d',price:0},
+    {id:'gelo',name:'Gelo Cristalino',rarity:'Raro',rc:'#c2c6d6',x:'#e0f2fe',o:'#7dd3fc',xs:'#3b6b8a',os:'#0c4a6e',price:350},
+    {id:'ciber',name:'Ciber-Robô',rarity:'Épico',rc:'#c2c6d6',x:'#4ade80',o:'#10b981',xs:'#166534',os:'#064e3b',price:500},
+    {id:'ouro',name:'Ouro Imperial',rarity:'Lendário',rc:'#ffb95f',x:'#e3b341',o:'#ffddb8',xs:'#7a5a10',os:'#8a6a20',price:900},
+    {id:'galaxia',name:'Galáxia Estelar',rarity:'Temporada 1',rc:'#d0bcff',x:'#c4b5fd',o:'#a78bfa',xs:'#4c1d95',os:'#3b0764',price:1200}];}
+  boardDefs(){return [
+    {id:'classico',name:'Arcade Clássico',rarity:'Padrão',rc:'#c2c6d6',bg:'#171f33',cell:'#222a3d',slot:'#060e20',price:0},
+    {id:'oceano',name:'Oceano Azul',rarity:'Raro',rc:'#adc6ff',bg:'#0d2740',cell:'#164067',slot:'#06182a',price:0},
+    {id:'magma',name:'Ilha de Magma',rarity:'Épico',rc:'#ffb95f',bg:'#2b1410',cell:'#4a2118',slot:'#170806',price:400},
+    {id:'jardim',name:'Jardim Serena',rarity:'Raro',rc:'#4ade80',bg:'#102a1d',cell:'#1c472f',slot:'#08170f',price:300},
+    {id:'ciber',name:'Ciber-Robô',rarity:'Épico',rc:'#34d399',bg:'#0a2a2b',cell:'#114749',slot:'#041718',price:600},
+    {id:'cosmico',name:'Tabuleiro Cósmico',rarity:'Lendário',rc:'#d0bcff',bg:'#1c1440',cell:'#2f2266',slot:'#0e0a24',price:1100}];}
+  auraDefs(){return [
+    {id:'nenhuma',name:'Sem Aura',rarity:'Padrão',rc:'#c2c6d6',glow:'rgba(0,0,0,0)',price:0},
+    {id:'brilho',name:'Brilho Pulverizado',rarity:'Raro',rc:'#adc6ff',glow:'rgba(173,198,255,.55)',price:0},
+    {id:'chama',name:'Rastro de Chama',rarity:'Épico',rc:'#ffb95f',glow:'rgba(255,185,95,.65)',price:250},
+    {id:'plasma',name:'Plasma Violeta',rarity:'Épico',rc:'#d0bcff',glow:'rgba(208,188,255,.65)',price:350},
+    {id:'esmeralda',name:'Pulso Esmeralda',rarity:'Lendário',rc:'#34d399',glow:'rgba(52,211,153,.65)',price:700},
+    {id:'estelar',name:'Poeira Estelar',rarity:'Temporada 1',rc:'#c4b5fd',glow:'rgba(196,181,253,.7)',price:1000}];}
+  packDefs(){return [
+    {id:'p1',name:'Punhado',coins:500,bonus:'',price:'R$ 4,90',icon:'savings',bg:'#653e00'},
+    {id:'p2',name:'Cofre',coins:1900,bonus:'+15% extra',price:'R$ 14,90',icon:'account_balance_wallet',bg:'#1e40af'},
+    {id:'p3',name:'Baú Real',coins:5000,bonus:'+30% extra',price:'R$ 34,90',icon:'diamond',bg:'#571bc1'}];}
+  skinOf(id){return this.skinDefs().find(s=>s.id===id)||this.skinDefs()[0];}
+  boardOf(id){return this.boardDefs().find(s=>s.id===id)||this.boardDefs()[0];}
+  auraOf(id){return this.auraDefs().find(s=>s.id===id)||this.auraDefs()[0];}
+  buyItem(it,kind){
+    const sv=this.state.save;
+    const keys={piece:['owned','skin'],board:['ownedBoards','board'],aura:['ownedAuras','aura']}[kind];
+    const list=sv[keys[0]]||[];
+    if(it.price===0||list.indexOf(it.id)>=0){
+      if(list.indexOf(it.id)<0)this.put({[keys[0]]:list.concat([it.id])});this.put({[keys[1]]:it.id});this.beep(700,.12);this.say('"'+it.name+'" equipado.');return;}
+    if(sv.coins<it.price){this.say('Faltam '+(it.price-sv.coins)+' moedas para '+it.name+'.');this.beep(200,.2,'sawtooth');return;}
+    this.put({coins:sv.coins-it.price,[keys[0]]:list.concat([it.id]),[keys[1]]:it.id});
+    this.fanfare();this.buzz([20,40,20]);this.say('Você desbloqueou '+it.name+'!');
+  }
+  buyPack(p){const sv=this.state.save;this.put({coins:sv.coins+p.coins});this.fanfare();this.say('+'+p.coins+' moedas creditadas (compra simulada).');}
+  refillLives(){const sv=this.state.save;if(sv.lives>=10){this.say('Suas vidas já estão cheias.');return;}if(sv.coins<150){this.say('Recarga custa 150 moedas.');return;}this.put({coins:sv.coins-150,lives:10,lifeAt:0});this.fanfare();this.say('Vidas recarregadas: 10/10.');}
+  lifeText(){const sv=this.state.save;if(sv.lives>=10||!sv.lifeAt)return '--:--';const ms=Math.max(0,sv.lifeAt-Date.now()),m=Math.floor(ms/60000),ss=Math.floor(ms%60000/1000);return (m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
+  buyPass(){const sv=this.state.save;if(sv.pass){this.say('Passe Ouro já está ativo.');return;}if(sv.coins<1500){this.say('Faltam '+(1500-sv.coins)+' moedas para o Passe Ouro.');return;}this.put({coins:sv.coins-1500,pass:true});this.fanfare();this.say('Passe Ouro da Temporada 2 ativado!');}
+  toggle(k){
+    const sv=this.state.save,val=!sv[k];this.put({[k]:val});this.beep(600,.05);this.buzz(10);
+    if(k==='music'){if(val){if(this.wa)this.waPlayMusic();else this.hardStart(this.track());}else this.stopMusic();}
+    if(k==='particles')this.say(val?'Partículas e brilhos ativados.':'Partículas desativadas.');
+  }
+  setVol(k,v){
+    const n=Number(v),sv=Object.assign({},this.state.save,{[k]:n});
+    this.audioVols(sv);
+    this.put({[k]:n});
+    if(k==='volSfx'){clearTimeout(this._vb);this._vb=setTimeout(()=>this.beep(660,.08),60);}
+    if(k==='volMenu'&&this.audio&&this.audio.menu&&this.audio.menu.paused&&sv.music){this.unlocked=true;this.syncMusic();}
+  }
+  audioVols(sv){
+    if(this.gMusic){const inMatch=this.state.screen==='match'||this.state.screen==='duel';this.gMusic.gain.value=Math.max(0,(inMatch?sv.volGame:sv.volMenu)/100);}
+    if(this.gSfx)this.gSfx.gain.value=Math.max(0,sv.volSfx/100);
+    const a=this.audio;if(!a)return;
+    const cl=(x)=>Math.max(0,Math.min(1,x/100));
+    if(a.menu){a.menu.volume=cl(sv.volMenu);a.menu.muted=sv.volMenu<=0;}
+    if(a.game){a.game.volume=cl(sv.volGame);a.game.muted=sv.volGame<=0;}
+    ['transition','ready','win','lose','draw'].forEach(k=>{if(a[k]){a[k].volume=cl(sv.volSfx);a[k].muted=sv.volSfx<=0;}});
+  }
+  hint(){
+    const s=this.state;
+    if(s.hints<=0||s.result||s.lock){this.say('Sem dicas nesta partida.');return;}
+    const i=this.mm(s.board.slice(),'X','X',0).i;
+    if(i==null)return;
+    this.setState({hints:s.hints-1,hintCell:i});this.beep(880,.12);
+  }
+  render_dummy(){}
+  renderVals(){
+    const s=this.state,sv=s.save,sk=this.skinOf(sv.skin),bd=this.boardOf(sv.board),au=this.auraOf(sv.aura);
+    const screen=s.screen;
+    const hub=['home','modos','mapa','loja','desafios','perfil'].indexOf(screen)>=0;
+    const nav=[['home','sports_esports','Jogar'],['mapa','map','Fases'],['loja','storefront','Loja'],['perfil','leaderboard','Rank']];
+    const pillOn='display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:999px;background:#4d8eff;color:#00285d';
+    const pillOff='display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:999px;background:transparent;color:#c2c6d6';
+    const line=s.win&&s.win.line;
+    const cen=[16.7,50,83.3];
+    const cells=[];
+    for(let i=0;i<9;i++){
+      const v=s.board[i],winCell=line&&line.indexOf(i)>=0;
+      let st='width:100%;height:100%;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:8px;position:relative;transition:transform .1s;';
+      if(v)st+='background:'+bd.slot+';box-shadow:inset 0 4px 6px rgba(0,0,0,.45)'+(sv.aura!=='nenhuma'?',0 0 18px '+au.glow:'')+';';
+      else st+='background:'+bd.cell+';box-shadow:0 6px 0 rgba(0,0,0,.45);';
+      if(winCell)st+='box-shadow:inset 0 4px 6px rgba(0,0,0,.45),0 0 26px rgba(255,185,95,.75);';
+      if(s.hintCell===i)st+='outline:2px dashed #ffb95f;';
+      if(s.sparkAt===i)st+='animation:pop .35s ease-out;box-shadow:inset 0 4px 6px rgba(0,0,0,.45),0 0 30px '+(au.glow==='rgba(0,0,0,0)'?'rgba(255,185,95,.5)':au.glow)+';';
+      cells.push({i,isX:v==='X',isO:v==='O',isEmpty:!v,style:st,plusColor:s.hintCell===i?'#ffb95f':'#8c909f',plusOpacity:s.hintCell===i?'.9':'.18',onClick:()=>this.play(i)});
+    }
+    const fmtBtn=(on)=>'width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:20px;background:'+(on?'#1d2745':'#171f33')+';box-shadow:0 4px 0 #060e20;'+(on?'outline:2px solid #4d8eff;':'');
+    const formats=[
+      {id:'bot',name:'Vs Robô Inteligente',tag:'Solo',desc:'Treine, suba de elo e teste sua tática.',icon:'smart_toy',bg:'#4d8eff'},
+      {id:'local',name:'2 Jogadores',tag:'Pass & Play',desc:'Duelo presencial no mesmo aparelho.',icon:'sports_esports',bg:'#571bc1'},
+      {id:'online',name:'Duelo Local Wi-Fi',tag:'Beta',desc:'Pareie por Wi-Fi ou Bluetooth.',icon:'wifi_tethering',bg:'#ca8100'}
+    ].map(f=>({...f,style:fmtBtn(s.fmt===f.id),iconStyle:'width:44px;height:44px;border-radius:999px;background:'+f.bg+';display:flex;align-items:center;justify-content:center;flex:none',titleColor:s.fmt===f.id?'#dae2fd':'#c2c6d6',tagStyle:'font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px;background:#222a3d;color:#c2c6d6;white-space:nowrap',radio:s.fmt===f.id?'radio_button_checked':'radio_button_unchecked',radioColor:s.fmt===f.id?'#4d8eff':'#424754',onClick:()=>{this.setState({fmt:f.id});this.beep(640,.05);}}));
+    const dlist=[
+      {id:'facil',name:'Fácil (Aprendiz)',sub:'Ideal para aquecer e descontrair',desc:'A IA comete erros pontuais e joga sem pressão matemática.',stars:'★★★',xp:15,gold:10,state:'Concluído',icon:'eco',bg:'#166534',sc:'#4ade80'},
+      {id:'medio',name:'Médio (Casual)',sub:'Equilíbrio tático & pura diversão',desc:'Bloqueia tentativas fáceis de vitória e busca sequências ativas.',stars:'★★☆',xp:35,gold:25,state:'Em Aberto',icon:'local_fire_department',bg:'#ca8100',sc:'#ffb95f',rec:true},
+      {id:'dificil',name:'Difícil (Mestre)',sub:'Para quem não perdoa deslizes',desc:'Cria armadilhas de bifurcação (forks) e lê suas próximas jogadas.',stars:'★★★',xp:60,gold:50,state:'0/3',icon:'bolt',bg:'#1e40af',sc:'#adc6ff'},
+      {id:'insano',name:'Insano (Minimax)',sub:'Matematicamente impossível de vencer',desc:'Algoritmo perfeito. Se você errar, perde. O máximo é Empate!',stars:'★★★',xp:120,gold:100,state:'Requer Nível 4',icon:'lock',bg:'#7f1d1d',sc:'#ffb4ab'}
+    ];
+    const diffs=dlist.map(d=>{
+      const on=s.diff===d.id,locked=d.id==='insano'&&sv.level<4;
+      return {...d,recommended:!!d.rec,titleColor:locked?'#8c909f':d.sc,subColor:locked?'#8c909f':d.sc,iconStyle:'width:40px;height:40px;border-radius:999px;background:'+d.bg+';display:flex;align-items:center;justify-content:center;flex:none;opacity:'+(locked?'.5':'1'),
+        style:'position:relative;width:100%;padding:14px;border-radius:22px;background:#171f33;box-shadow:0 4px 0 #060e20;'+(on?'outline:2px solid #ffb95f;':'')+(locked?'opacity:.6;':''),
+        onClick:()=>{if(locked){this.say('Insano libera no Nível 4.');return;}this.setState({diff:d.id});this.beep(660,.06);}};
+    });
+    const starters=[['voce','Você','close'],['sorteio','Sorteio','casino'],['robo','Robô','smart_toy']].map(([id,name,icon])=>({id,name,icon,style:'flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:42px;border-radius:999px;font-size:13px;font-weight:800;background:'+(s.starter===id?'#4d8eff':'#222a3d')+';color:'+(s.starter===id?'#fff':'#c2c6d6'),onClick:()=>{this.setState({starter:id});this.beep(600,.05);}}));
+    const series=[['1','1 Jogo'],['3','Melhor de 3']].map(([id,name])=>({id,name,style:'padding:10px 12px;border-radius:12px;font-size:12px;font-weight:800;background:'+(s.bestOf===id?'#2d3449':'#222a3d')+';color:'+(s.bestOf===id?'#dae2fd':'#8c909f'),onClick:()=>this.setState({bestOf:id})}));
+    const phases=[];
+    for(let p=1;p<=10;p++){
+      const unlocked=p<=sv.phase,cur=p===sv.phase;
+      phases.push({n:p,label:String(p),icon:cur?'swords':(unlocked?'check':'lock'),iconColor:cur?'#3e2400':(unlocked?'#dae2fd':'#8c909f'),
+        rowStyle:'display:flex;align-items:center;gap:12px;padding-left:'+(p%2?0:70)+'px',
+        style:'width:62px;height:62px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;background:'+(cur?'linear-gradient(180deg,#ffddb8,#ca8100)':(unlocked?'#4d8eff':'#222a3d'))+';box-shadow:0 6px 0 '+(cur?'#653e00':(unlocked?'#00285d':'#131b2e'))+(cur?';animation:bob 2.4s infinite':''),
+        stars:unlocked&&!cur?'★★★':(cur?'✦ NOVA FASE!':''),note:cur?'Robô Tático · +120 Ouro':(unlocked?'Concluída':'Bloqueada'),
+        onClick:()=>{if(!unlocked){this.say('Fase '+p+' ainda bloqueada.');return;}this.start({mode:'bot',diff:p>=7?'dificil':(p>=4?'medio':'facil'),phase:p});}});
+    }
+    const shopTabs=[['pecas','Peças X & O'],['tabuleiros','Tabuleiros'],['auras','Auras'],['moedas','Moedas & Vidas']].map(([id,name])=>({id,name,style:'padding:10px 16px;border-radius:999px;font-size:13px;font-weight:800;white-space:nowrap;background:'+(s.shopTab===id?'#4d8eff':'#171f33')+';color:'+(s.shopTab===id?'#fff':'#c2c6d6'),onClick:()=>{this.setState({shopTab:id});this.beep(620,.05);}}));
+    const kind=s.shopTab==='tabuleiros'?'board':(s.shopTab==='auras'?'aura':'piece');
+    const ownKey={piece:'owned',board:'ownedBoards',aura:'ownedAuras'}[kind];
+    const curKey={piece:'skin',board:'board',aura:'aura'}[kind];
+    const defs=kind==='board'?this.boardDefs():(kind==='aura'?this.auraDefs():this.skinDefs());
+    const items=defs.map(k=>{
+      const owned=k.price===0||(sv[ownKey]||[]).indexOf(k.id)>=0,eq=sv[curKey]===k.id;
+      return {...k,equipped:eq,rarityColor:k.rc,isPiece:kind==='piece',isBoard:kind==='board',isAura:kind==='aura',
+        x:k.x||'#adc6ff',o:k.o||'#ffb95f',
+        swatchStyle:kind==='board'?'width:74px;height:52px;border-radius:12px;background:'+k.bg+';display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:5px'
+          :'width:52px;height:52px;border-radius:999px;background:#131b2e;box-shadow:0 0 22px '+(k.glow||'transparent')+';display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:'+k.rc,
+        chips:kind==='board'?[1,2,3,4,5,6,7,8,9].map(n=>({style:'border-radius:4px;background:'+k.cell})):[],
+        cardStyle:'position:relative;background:#171f33;border-radius:20px;padding:12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;box-shadow:0 5px 0 #060e20;'+(eq?'outline:2px solid #4d8eff;':''),
+        btnStyle:'width:100%;height:38px;border-radius:999px;font-size:12px;font-weight:800;margin-top:6px;background:'+(eq?'#222a3d':(owned?'#2d3449':'linear-gradient(180deg,#ffddb8,#ca8100)'))+';color:'+(eq?'#8c909f':(owned?'#dae2fd':'#3e2400')),
+        action:eq?'✓ Equipado':(owned?'Equipar':'Ⓢ '+k.price),
+        onClick:()=>this.buyItem(k,kind)};
+    });
+    const packs=this.packDefs().map(p=>({...p,iconStyle:'width:46px;height:46px;border-radius:14px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;flex:none',onClick:()=>this.buyPack(p)}));
+    const preview=[];
+    const pv=['X',null,'O',null,'X',null,'O',null,null];
+    for(let i=0;i<9;i++)preview.push({mark:pv[i]==='X'?'✕':(pv[i]==='O'?'◯':''),style:'border-radius:10px;background:'+(pv[i]?bd.slot:bd.cell)+';display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;'+(pv[i]&&sv.aura!=='nenhuma'?'box-shadow:0 0 14px '+au.glow+';':'')+'color:'+(pv[i]==='X'?sk.x:sk.o)});
+    const ownedTotal=(sv.owned||[]).length+(sv.ownedBoards||[]).length+(sv.ownedAuras||[]).length;
+    const missionDefs=[
+      {id:'m1',name:'Primeira Vitória',desc:'Vença sua primeira partida de hoje no modo Casual ou Ranqueado.',cur:sv.m1,goal:1,gold:50,xp:10,icon:'emoji_events',bg:'#ca8100',bar:'#10b981',reset:'m1'},
+      {id:'m2',name:'Três Seguidas',desc:'Consiga 3 vitórias consecutivas contra a IA ou jogador local.',cur:sv.m2,goal:3,gold:100,xp:15,icon:'local_fire_department',bg:'#571bc1',bar:'#4d8eff',reset:'m2'},
+      {id:'m3',name:'Bloqueio Perfeito',desc:'Impeça o oponente de completar uma trinca 2 vezes no mesmo jogo.',cur:sv.m3,goal:2,gold:50,xp:10,icon:'shield',bg:'#1e40af',bar:'#4d8eff',reset:'m3'}
+    ];
+    const achieveDefs=[
+      {id:'a1',name:'Mestre do Tabuleiro',desc:'Vença uma partida no nível Insano da IA.',cur:sv.acInsano||0,goal:1,gold:200,xp:120,icon:'workspace_premium',bg:'#653e00',bar:'#ffb95f',tag:'ÉPICO'},
+      {id:'a2',name:'Rei da Diagonal',desc:'Vença 50 partidas fechando uma linha inclinada.',cur:sv.acDiag||0,goal:50,gold:300,xp:150,icon:'north_east',bg:'#1e40af',bar:'#4d8eff',tag:'OURO'},
+      {id:'a3',name:'Estrategista Nato',desc:'Vença 100 partidas no total contra a máquina.',cur:sv.wins,goal:100,gold:250,xp:100,icon:'psychology',bg:'#571bc1',bar:'#d0bcff',tag:'RARO'},
+      {id:'a4',name:'Colecionador',desc:'Desbloqueie 10 itens entre peças, tabuleiros e auras.',cur:ownedTotal,goal:10,gold:400,xp:200,icon:'palette',bg:'#0f766e',bar:'#34d399',tag:'LENDÁRIO'}
+    ];
+    const seasonDefs=[
+      {id:'s1',name:'Nível 1 — Boas-vindas',desc:'Alcance 400 XP na Temporada 2 e receba moedas de largada.',cur:sv.xp,goal:400,gold:100,xp:0,icon:'looks_one',bg:'#222a3d',bar:'#ffb95f'},
+      {id:'s2',name:'Nível 2 — Aura Chama',desc:'Alcance 900 XP e libere a aura Rastro de Chama sem custo.',cur:sv.xp,goal:900,gold:0,xp:0,icon:'looks_two',bg:'#653e00',bar:'#ffb95f',grant:{ownedAuras:'chama'},pass:true},
+      {id:'s3',name:'Nível 3 — Tabuleiro Cósmico',desc:'Alcance 1.500 XP e leve o tabuleiro lendário da temporada.',cur:sv.xp,goal:1500,gold:0,xp:0,icon:'looks_3',bg:'#571bc1',bar:'#d0bcff',grant:{ownedBoards:'cosmico'},pass:true},
+      {id:'s4',name:'Nível 4 — Galáxia Estelar',desc:'Alcance 2.000 XP e desbloqueie o conjunto de peças da temporada.',cur:sv.xp,goal:2000,gold:500,xp:0,icon:'looks_4',bg:'#1e40af',bar:'#adc6ff',grant:{owned:'galaxia'},pass:true}
+    ];
+    const activeDefs=s.dTab==='conquistas'?achieveDefs:(s.dTab==='temporada'?seasonDefs:missionDefs);
+    const claimed=sv.claimed||[];
+    const missions=activeDefs.map(m=>{
+      const cur=Math.min(m.cur,m.goal),done=cur>=m.goal,got=claimed.indexOf(m.id)>=0;
+      return {...m,prog:cur+'/'+m.goal,pct:Math.round(cur/m.goal*100)+'%',barColor:m.bar,hasGold:m.gold>0,hasXp:m.xp>0,
+        iconStyle:'width:44px;height:44px;border-radius:14px;background:'+m.bg+';display:flex;align-items:center;justify-content:center;flex:none',
+        btnStyle:'margin-left:auto;padding:9px 18px;border-radius:999px;font-size:12px;font-weight:800;background:'+(got?'#222a3d':(done?'linear-gradient(180deg,#ffddb8,#ca8100)':'#4d8eff'))+';color:'+(got?'#8c909f':(done?'#3e2400':'#fff')),
+        action:got?'✓ COLETADO':(m.pass&&!sv.pass?'🔒 PASSE':(done?'Ⓢ COLETAR':'JOGAR ▶')),
+        onClick:()=>{
+          if(got){this.say('Recompensa já coletada.');return;}
+          if(m.pass&&!sv.pass){this.say('Recompensa exclusiva do Passe Ouro.');return;}
+          if(!done){this.go('modos');return;}
+          const patch={coins:sv.coins+m.gold,xp:sv.xp+m.xp};
+          if(m.reset)patch[m.reset]=0; else patch.claimed=claimed.concat([m.id]);
+          if(m.grant){const k=Object.keys(m.grant)[0];patch[k]=(sv[k]||[]).concat([m.grant[k]]);}
+          this.put(patch);this.fanfare();this.say(m.gold?('+'+m.gold+' moedas coletadas!'):'Recompensa desbloqueada!');
+        }};
+    });
+    const stats=[
+      {icon:'sports_esports',value:sv.games,label:'Partidas',color:'#dae2fd',bg:'#222a3d'},
+      {icon:'emoji_events',value:sv.wins,label:'Vitórias',color:'#ffb95f',bg:'#653e00'},
+      {icon:'heart_broken',value:sv.losses,label:'Derrotas',color:'#ffb4ab',bg:'#3a1418'},
+      {icon:'handshake',value:sv.draws,label:'Deu Velha!',color:'#d0bcff',bg:'#2a1a4d'}
+    ].map(x=>({...x,iconStyle:'width:34px;height:34px;border-radius:999px;background:'+x.bg+';display:flex;align-items:center;justify-content:center;flex:none'}));
+    const badges=[
+      {name:'Rei da Diagonal',desc:'50 vitórias com linha inclinada',tier:'Ouro',tierColor:'#ffb95f',icon:'north_east',bg:'#653e00',on:true},
+      {name:'Invicto 5x',desc:'Vença 5 seguidas sem perder',tier:'Prata',tierColor:'#c2c6d6',icon:'shield',bg:'#2d3449',on:true},
+      {name:'Colecionador',desc:sv.owned.length+'/6 conjuntos',tier:'',tierColor:'#8c909f',icon:'palette',bg:'#571bc1',on:true},
+      {name:'Mestre Insano',desc:'Derrote a IA Impossível',tier:'Oculto',tierColor:'#8c909f',icon:'lock',bg:'#222a3d',on:false}
+    ].map(b=>({...b,style:'background:#131b2e;border-radius:16px;padding:12px;'+(b.on?'':'opacity:.55'),iconStyle:'width:34px;height:34px;border-radius:999px;background:'+b.bg+';display:flex;align-items:center;justify-content:center'}));
+    const sw=(on)=>'width:50px;height:28px;border-radius:999px;flex:none;display:flex;align-items:center;padding:3px;background:'+(on?'#ffb95f':'#2d3449');
+    const kn=(on)=>'width:22px;height:22px;border-radius:999px;background:#fff;display:block;margin-left:'+(on?'22px':'0')+';transition:margin .15s';
+    const mk=(k,name,desc,icon,bg)=>({isSwitch:true,name,desc,icon,iconStyle:'width:34px;height:34px;border-radius:10px;background:'+bg+';display:flex;align-items:center;justify-content:center;flex:none',switchStyle:sw(sv[k]),knobStyle:kn(sv[k]),onClick:()=>this.toggle(k)});
+    const vol=(k,name,accent)=>({isSlider:true,name,value:sv[k],valueText:sv[k]+'%',accent,sliderStyle:'flex:1;accent-color:'+accent+';height:6px',onChange:(e)=>this.setVol(k,e.target.value)});
+    const settings=[
+      {title:'🔊 ÁUDIO & TRILHA SONORA',items:[mk('sfx','Efeitos Sonoros (SFX)','Largada da partida e resultados','sports_esports','#653e00'),vol('volSfx','Volume dos efeitos','#ffb95f'),mk('music','Música de Fundo','Trilha do menu e da partida','music_note','#571bc1'),vol('volMenu','Música do menu','#adc6ff'),vol('volGame','Música da partida','#d0bcff')]},
+      {title:'📳 SENSAÇÃO & JOGABILIDADE',items:[mk('haptics','Vibração Tátil (Haptics)','Impacto nas marcações do tabuleiro','vibration','#1e40af'),mk('confirm','Confirmação de Jogada','Toque duplo antes de fixar X ou O','done_all','#222a3d'),mk('particles','Partículas e Brilhos','Confetes e faíscas dinâmicas','auto_awesome','#653e00')]},
+      {title:'🔔 NOTIFICAÇÕES',items:[mk('nDaily','Missões Diárias','Aviso antes de expirar bônus do dia','notifications','#653e00'),mk('nLives','Vidas Recarregadas','Alerta quando o estoque encher','bolt','#1e40af'),mk('nSeason','Passes & Temporadas','Novidades de eventos e skins','emoji_events','#222a3d')]}
+    ];
+    const peers=[
+      {name:'Mariana (Galaxy S23)',state:'Excelente',ping:'12ms',icon:'smartphone',bg:'#571bc1',action:'Convidar',ok:true},
+      {name:'Pedro_Velha (iPhone 14)',state:'Em partida',ping:'28ms',icon:'smartphone',bg:'#222a3d',action:'Ocupado',ok:false},
+      {name:'Mesa do Carlos',state:'Sala Aberta',ping:'18ms',icon:'table_restaurant',bg:'#653e00',action:'Entrar',ok:true}
+    ].map(p=>({...p,iconStyle:'width:40px;height:40px;border-radius:12px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;flex:none',nameColor:p.ok?'#dae2fd':'#8c909f',stateColor:p.ok?'#ffb95f':'#ffb4ab',
+      btnStyle:'padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;background:'+(p.ok?(p.action==='Entrar'?'linear-gradient(180deg,#ffddb8,#ca8100)':'#4d8eff'):'#222a3d')+';color:'+(p.ok?(p.action==='Entrar'?'#3e2400':'#fff'):'#8c909f'),
+      onClick:()=>{if(!p.ok){this.say(p.name+' está em partida.');return;}this.say('Conectando com '+p.name+'…');setTimeout(()=>this.start({mode:'online'}),900);}}));
+    const pinCells=[0,1,2,3].map(i=>({ch:s.pin[i]||'•',style:'width:38px;height:44px;border-radius:12px;background:#222a3d;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:'+(s.pin[i]?'#dae2fd':'#424754')}));
+    const keypad=[1,2,3,4,5,6,7,8,9,0].map(n=>({n,onClick:()=>{if(s.pin.length<4){this.setState({pin:s.pin+n});this.beep(700,.04);}}}));
+    const quickToggles=[['sfx','Efeitos','volume_up'],['music','Música','music_note'],['particles','Brilhos','auto_awesome']].map(([k,name,icon])=>({name,icon,style:'display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;border-radius:14px;background:#131b2e;color:'+(sv[k]?'#adc6ff':'#424754'),onClick:()=>this.toggle(k)}));
+    const reactions=['👏','🔥','🤔','👋','🏆'].map(e=>({emoji:e,onClick:()=>{this.setState({reactionShown:e});this.beep(760,.08);}}));
+    const duelTabs=[['mesa','Mesa (Mesmo Aparelho)','vibration'],['wifi','Wi-Fi / Bluetooth','wifi_tethering']].map(([id,name,icon])=>({id,name,icon,style:'flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:999px;font-size:12px;font-weight:800;background:'+(s.duelTab===id?'#4d8eff':'transparent')+';color:'+(s.duelTab===id?'#fff':'#c2c6d6'),onClick:()=>{this.setState({duelTab:id});if(id==='wifi')this.go('lobby');}}));
+    const lobbyTabs=[['wifi','Wi-Fi Direto','wifi'],['bt','Bluetooth','bluetooth']].map(([id,name,icon])=>({id,name,icon,style:'flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:999px;font-size:13px;font-weight:800;background:'+(s.lobbyTab===id?'#4d8eff':'transparent')+';color:'+(s.lobbyTab===id?'#fff':'#c2c6d6'),onClick:()=>this.setState({lobbyTab:id})}));
+    const clocks=['10s','15s','Livre'].map(c=>({name:c,style:'padding:8px 14px;border-radius:999px;font-size:12px;font-weight:800;background:'+(s.clock===c?'#4d8eff':'transparent')+';color:'+(s.clock===c?'#fff':'#c2c6d6'),onClick:()=>this.setState({clock:c,turnTime:c==='10s'?10:15})}));
+    const mm=Math.floor(s.elapsed/60),ss=s.elapsed%60;
+    const turnP1=s.turn==='X'&&!s.result,turnP2=s.turn==='O'&&!s.result;
+    const turnPill=(on)=>'font-size:12px;font-weight:800;padding:8px 14px;border-radius:999px;background:'+(on?'#adc6ff':'#222a3d')+';color:'+(on?'#00285d':'#8c909f');
+    const openMissions=missionDefs.filter(m=>m.cur<m.goal).length;
+    const allDefs=missionDefs.concat(achieveDefs).concat(seasonDefs);
+    const doneCount=allDefs.filter(m=>m.cur>=m.goal).length;
+    return {
+      hub,showNav:hub,arena:screen==='match'||screen==='duel',
+      isHome:screen==='home',isModos:screen==='modos',isMapa:screen==='mapa',isMatch:screen==='match',isDuel:screen==='duel',isLobby:screen==='lobby',isLoja:screen==='loja',isDesafios:screen==='desafios',isPerfil:screen==='perfil',isConfig:screen==='config',
+      coins:sv.coins,trophies:sv.trophies,lvl:sv.level,lives:sv.lives,xp:sv.xp,streak:sv.streak,
+      xpPct:Math.round(sv.xp/2000*100)+'%',winRate:Math.round(sv.wins/Math.max(1,sv.games)*100),
+      refMenu:this.bind('menu'),refGame:this.bind('game'),refTransition:this.bind('transition'),refReady:this.bind('ready'),refWin:this.bind('win'),refLose:this.bind('lose'),refDraw:this.bind('draw'),
+      livesText:sv.lives+'/10',lifeTimer:this.lifeText(),livesFull:sv.lives>=10,livesLow:sv.lives<10,
+      isTemporada:s.dTab==='temporada',passActive:!!sv.pass,passLabel:sv.pass?'✓ PASSE OURO ATIVO':'Ⓢ 1500 · ATIVAR PASSE',
+      buyPass:()=>this.buyPass(),
+      dailyDone:sv.daily||0,dailyPct:((sv.daily||0)?100:8)+'%',openMissions,
+      phase:sv.phase,phases,starsTotal:(sv.phase-1)*3,
+      nav:nav.map(([id,icon,name])=>({icon,name,style:screen===id||(id==='perfil'&&screen==='config')?pillOn:pillOff,onClick:()=>this.go(id)})),
+      formats,diffs,starters,series,diffName:(dlist.find(d=>d.id===s.diff)||{}).name,
+      cells,xColor:sk.x,oColor:sk.o,xShadow:sk.xs||'#93000a',oShadow:sk.os||'#571bc1',
+      boardStyle:'width:100%;aspect-ratio:1/1;background:'+bd.bg+';border-radius:28px;padding:14px;box-shadow:0 12px 0 rgba(0,0,0,.55),0 20px 28px rgba(0,0,0,.5);position:relative',
+      refillLives:()=>this.refillLives(),
+      hasWinLine:!!line,lx1:line?cen[line[0]%3]:0,ly1:line?cen[Math.floor(line[0]/3)]:0,lx2:line?cen[line[2]%3]:0,ly2:line?cen[Math.floor(line[2]/3)]:0,
+      ready:!!s.ready,readyText:s.ready,
+      statusText:s.result?(s.result==='X'?'✨ VITÓRIA TRIPLA DE X! ✨':(s.result==='O'?'A IA LEVOU ESSA':'DEU VELHA!')):(s.turn==='X'?'✨ SUA VEZ DE JOGAR ✨':'Robô pensando…'),
+      botName:s.diff==='insano'?'Bot Insano':(s.diff==='dificil'?'Robô Tático':(s.diff==='facil'?'Bot Aprendiz':'Bot Casual')),
+      arenaTitle:s.phasePlay?('Fase '+s.phasePlay):'Arena De Partida',
+      isPhaseMatch:!!s.phasePlay,moves:s.moves,hints:s.hints,
+      timerText:s.clock==='Livre'?'∞':s.turnTime+'s',
+      scoreP1:s.scoreP1,scoreP2:s.scoreP2,
+      elapsedText:(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss,elapsedShort:s.elapsed+'s',
+      turnLabel:s.turn==='X'?'Sua vez (✕)':'Vez do Bot (◯)',
+      p1Name:'Você (Jogador 1)',p2Name:s.mode==='local'?'Jogador 2':'Mariana',
+      p1Turn:turnP1?'SUA VEZ!':'Aguardando',p2Turn:turnP2?'JOGANDO…':'Aguardando',
+      p1TurnStyle:turnPill(turnP1),p2TurnStyle:turnPill(turnP2),
+      p2CardStyle:'background:#222a3d;border-radius:20px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 0 #131b2e;'+(s.duelTab==='mesa'&&s.flip?'transform:rotate(180deg);':''),
+      duelTabs,duelLocal:s.duelTab==='mesa',duelOnline:s.duelTab==='wifi',clocks,reactions,reactionShown:s.reactionShown,
+      lobbyTabs,lobbyIcon:s.lobbyTab==='wifi'?'wifi':'bluetooth',lobbyState:s.lobbyTab==='wifi'?'Wi-Fi Ativado':'Bluetooth Ativado',
+      peers,pinCells,keypad,
+      shopTabs,items,packs,preview,isMoedas:s.shopTab==='moedas',notMoedas:s.shopTab!=='moedas',
+      shopTitle:s.shopTab==='tabuleiros'?'Coleção de Tabuleiros':(s.shopTab==='auras'?'Coleção de Auras':(s.shopTab==='moedas'?'Pacotes de Moedas':'Coleção de Peças')),
+      skinName:sk.name,boardName:bd.name,auraName:au.name,itemCount:s.shopTab==='moedas'?4:defs.length,
+      ownedTotal,collectionPct:Math.round(ownedTotal/18*100)+'%',
+      missions,missionsDone:doneCount,missionsTotal:allDefs.length,chestPct:Math.min(100,Math.round(doneCount/allDefs.length*100))+'%',
+      desafioTabs:[['diarias','Diárias','Expira 06h 42m'],['conquistas','Conquistas','24 disponíveis'],['temporada','Temporada','Passe Ouro']].map(([id,name,sub])=>({name,sub,style:'flex:1;padding:8px;border-radius:14px;font-size:13px;font-weight:800;background:'+(s.dTab===id?'#adc6ff':'transparent')+';color:'+(s.dTab===id?'#00285d':'#c2c6d6'),onClick:()=>this.setState({dTab:id})})),
+      stats,badges,settings,quickToggles,
+      showConfetti:s.confetti.length>0&&(s.modal==='win'||s.result==='X'),confetti:s.confetti,
+      modalPause:s.modal==='pause',modalWin:s.modal==='win',modalLose:s.modal==='lose',modalDraw:s.modal==='draw',
+      rewardCoins:s.rewardCoins,rewardXp:s.rewardXp,
+      winSubtitle:'Você dominou a grade e venceu o '+(s.mode==='local'?'Jogador 2':'Bot')+' com maestria!',
+      nextLabel:s.phasePlay?'PRÓXIMA FASE':'PRÓXIMA PARTIDA',
+      toast:!!s.toast,toastText:s.toast,
+      goHome:()=>this.go('home'),goModos:()=>this.go('modos'),goLoja:()=>this.go('loja'),goPerfil:()=>this.go('perfil'),goConfig:()=>this.go('config'),goDesafios:()=>this.go('desafios'),
+      pause:()=>this.setState({modal:'pause'}),resume:()=>this.setState({modal:null}),
+      closeModal:()=>this.setState({modal:null}),
+      restart:()=>this.start({mode:s.mode,diff:s.diff,phase:s.phasePlay}),
+      leaveMatch:()=>{this.setState({result:null,modal:null});this.go(s.phasePlay?'mapa':'home');},
+      abandon:()=>{this.put({losses:sv.losses+1,streak:0,lives:Math.max(0,sv.lives-1),lifeAt:sv.lifeAt&&sv.lives<10?sv.lifeAt:Date.now()+this.RECHARGE});this.setState({modal:null,result:null});this.go('home');},
+      nextPhase:()=>{this.setState({modal:null});if(s.phasePlay)this.go('mapa');else this.start({mode:s.mode,diff:s.diff});},
+      startFromModos:()=>{if(s.fmt==='online'){this.go('lobby');return;}this.start({mode:s.fmt,diff:s.diff});},
+      playPhase:()=>this.start({mode:'bot',diff:sv.phase>=7?'dificil':'medio',phase:sv.phase}),
+      hint:()=>this.hint(),toggleFlip:()=>this.setState({flip:!s.flip}),
+      createRoom:()=>this.say('Sala criada • PIN 8824'),rescan:()=>this.say('Varredura concluída: 3 dispositivos.'),
+      connectPin:()=>{if(s.pin.length<4){this.say('Digite os 4 dígitos do PIN.');return;}this.say('Conectando à sala '+s.pin+'…');setTimeout(()=>this.start({mode:'online'}),900);},
+      testSkin:()=>this.start({mode:'bot',diff:'facil'}),
+      resetSave:()=>{try{localStorage.removeItem('jdv_arcade_v1');}catch(e){}this.say('Progresso zerado. Recarregue para ver.');}
+    };
+  }
+}
+</script>
+</body>
+</html>
