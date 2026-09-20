@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<script src="./react.production.min.js"></script>
+<script src="./react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -11,9 +13,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;700;800&family=Rubik:wght@500;700;800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#05091a;font-family:Rubik,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./material_symbols.ttf') format('truetype');
+}
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#05091a;font-family:Rubik,system-ui,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 *{box-sizing:border-box}
-button{font-family:inherit;cursor:pointer;border:0}
+button{font-family:inherit;cursor:pointer;border:0;outline:none}
 i{font-family:'Material Symbols Outlined';font-style:normal;font-weight:400;font-variation-settings:'FILL' 1;line-height:1;display:inline-block;user-select:none}
 a{color:#adc6ff;text-decoration:none}
 a:hover{color:#d8e2ff}
@@ -27,13 +35,49 @@ a:hover{color:#d8e2ff}
 @keyframes ready{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}80%{transform:scale(1);opacity:1}100%{transform:scale(.8);opacity:0}}
 @keyframes ring{0%{transform:scale(.8);opacity:.8}100%{transform:scale(2);opacity:0}}
 @keyframes shine{0%{transform:translateX(-120%) skewX(-25deg)}100%{transform:translateX(420%) skewX(-25deg)}}
+
+.app-outer-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background: radial-gradient(1200px 600px at 50% -10%, #141b3a 0%, #05091a 70%);
+  overflow: hidden;
+}
+.app-phone-container {
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  position: relative;
+  background: #0b1326;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.app-scroll-body {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 12px 76px;
+}
 </style>
 </helmet>
 
-<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:18px 12px 40px;background:radial-gradient(1200px 600px at 50% -10%,#141b3a 0%,#05091a 70%)">
-<div style="width:390px;height:844px;position:relative;background:#0b1326;border-radius:40px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.65),0 0 0 9px #11162b,0 0 0 11px #262c47;flex:none">
+<div class="app-outer-wrapper">
+<div class="app-phone-container">
 
-<div style="position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:14px 16px 96px">
+<div class="app-scroll-body">
 
 <sc-if value="{{ hub }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none">
@@ -85,10 +129,11 @@ a:hover{color:#d8e2ff}
 </div>
 <div style="display:flex;flex-direction:column;gap:6px;background:#171f33;padding:14px;border-radius:24px;box-shadow:0 4px 0 #060e20">
 <div style="display:flex;align-items:center;justify-content:space-between">
-<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:999px;background:rgba(202,129,0,.3);display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">verified</i></div><div><span style="display:block;font-size:11px;font-weight:800;letter-spacing:1px;color:#ffb95f">MISSÃO DO DIA</span><span style="font-size:13px;font-weight:700;color:#dae2fd">Vença 1 partida</span></div></div>
-<div style="display:flex;align-items:center;gap:4px;background:#222a3d;padding:3px 9px;border-radius:999px"><i style="font-size:14px;color:#ffb95f">monetization_on</i><span style="font-size:11px;font-weight:800;color:#dae2fd">+30</span></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:999px;background:rgba(202,129,0,.3);display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">verified</i></div><div><span style="display:block;font-size:11px;font-weight:800;letter-spacing:1px;color:#ffb95f">{{ dailyBadge }}</span><span style="font-size:13px;font-weight:700;color:#dae2fd">{{ dailyTitle }}</span></div></div>
+<sc-if value="{{ dailyCanClaim }}"><button onClick="{{ claimDaily }}" style="padding:6px 12px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ca8100);color:#3e2400;font-size:11px;font-weight:900;border:0;box-shadow:0 3px 0 #653e00">COLETAR +30</button></sc-if>
+<sc-if value="{{ notDailyCanClaim }}"><div style="display:flex;align-items:center;gap:4px;background:#222a3d;padding:3px 9px;border-radius:999px"><i style="font-size:14px;color:#ffb95f">monetization_on</i><span style="font-size:11px;font-weight:800;color:#dae2fd">{{ dailyRewardText }}</span></div></sc-if>
 </div>
-<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#c2c6d6;margin-top:4px"><span>Progresso</span><span style="color:#dae2fd">{{ dailyDone }} / 1</span></div>
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#c2c6d6;margin-top:4px"><span>Progresso</span><span style="color:#dae2fd">{{ dailyProgText }}</span></div>
 <div style="width:100%;height:12px;border-radius:999px;background:#2d3449;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#4d8eff,#adc6ff);width:{{ dailyPct }}"></div></div>
 </div>
 </div>
@@ -169,33 +214,33 @@ a:hover{color:#d8e2ff}
 </sc-if>
 
 <sc-if value="{{ isMatch }}" hint-placeholder-val="{{ false }}">
-<div style="display:flex;flex-direction:column;gap:12px">
-<div style="display:flex;justify-content:center"><div style="display:flex;align-items:center;gap:8px;background:#222a3d;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.25)"><span style="width:9px;height:9px;border-radius:999px;background:#ffb95f;animation:pulse 1.2s infinite"></span><span style="font-size:13px;font-weight:800;color:#dae2fd;letter-spacing:.5px">{{ statusText }}</span></div></div>
-<div style="background:#222a3d;border-radius:18px;padding:10px 12px;box-shadow:0 8px 0 #131b2e;display:flex;align-items:center;justify-content:space-between">
-<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
-<div style="position:relative"><div style="width:48px;height:48px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #131b2e"><i style="font-size:28px;color:#adc6ff">face</i></div><div style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:999px;background:#93000a;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#ffb4ab">✕</div></div>
-<div style="min-width:0"><span style="display:block;font-size:13px;font-weight:700;color:#dae2fd">Você</span><span style="font-size:22px;font-weight:800;color:#adc6ff;line-height:1">{{ scoreP1 }}</span></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:center"><div style="display:flex;align-items:center;gap:6px;background:#222a3d;padding:4px 12px;border-radius:999px;box-shadow:0 3px 8px rgba(0,0,0,.25)"><span style="width:8px;height:8px;border-radius:999px;background:#ffb95f;animation:pulse 1.2s infinite"></span><span style="font-size:12px;font-weight:800;color:#dae2fd;letter-spacing:.5px">{{ statusText }}</span></div></div>
+<div style="background:#222a3d;border-radius:14px;padding:6px 10px;box-shadow:0 4px 0 #131b2e;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+<div style="position:relative"><div style="width:38px;height:38px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #131b2e"><i style="font-size:22px;color:#adc6ff">face</i></div><div style="position:absolute;bottom:-3px;right:-3px;width:18px;height:18px;border-radius:999px;background:#93000a;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#ffb4ab">✕</div></div>
+<div style="min-width:0"><span style="display:block;font-size:12px;font-weight:800;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ playerName }}</span><span style="font-size:18px;font-weight:800;color:#adc6ff;line-height:1">{{ scoreP1 }}</span></div>
 </div>
-<div style="display:flex;flex-direction:column;align-items:center;padding:0 8px">
-<div style="background:#2d3449;padding:2px 10px;border-radius:999px"><span style="font-size:11px;font-weight:900;color:#ffb95f;letter-spacing:2px">VS</span></div>
-<div style="display:flex;align-items:center;gap:3px;margin-top:4px;color:#c2c6d6"><i style="font-size:14px">timer</i><span style="font-size:11px;font-weight:700">{{ timerText }}</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;padding:0 6px">
+<div style="background:#2d3449;padding:2px 8px;border-radius:999px"><span style="font-size:10px;font-weight:900;color:#ffb95f;letter-spacing:1px">VS</span></div>
+<div style="display:flex;align-items:center;gap:2px;margin-top:2px;color:#c2c6d6"><i style="font-size:12px">timer</i><span style="font-size:10px;font-weight:700">{{ timerText }}</span></div>
 </div>
-<div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex:1;min-width:0">
-<div style="text-align:right;min-width:0"><span style="display:block;font-size:13px;font-weight:700;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ botName }}</span><span style="font-size:22px;font-weight:800;color:#d0bcff;line-height:1">{{ scoreP2 }}</span></div>
-<div style="position:relative"><div style="width:48px;height:48px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #131b2e"><i style="font-size:26px;color:#d0bcff">smart_toy</i></div><div style="position:absolute;bottom:-4px;left:-4px;width:24px;height:24px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#d0bcff">◯</div></div>
+<div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:1;min-width:0">
+<div style="text-align:right;min-width:0"><span style="display:block;font-size:12px;font-weight:700;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ botName }}</span><span style="font-size:18px;font-weight:800;color:#d0bcff;line-height:1">{{ scoreP2 }}</span></div>
+<div style="position:relative"><div style="width:38px;height:38px;border-radius:999px;background:#2d3449;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #131b2e"><i style="font-size:20px;color:#d0bcff">smart_toy</i></div><div style="position:absolute;bottom:-3px;left:-3px;width:18px;height:18px;border-radius:999px;background:#571bc1;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#d0bcff">◯</div></div>
 </div>
 </div>
 <sc-if value="{{ isPhaseMatch }}" hint-placeholder-val="{{ false }}">
-<div style="background:#222a3d;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center"><div style="width:34px;height:34px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:18px;color:#ffb95f">target</i></div><div><span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">MISSÃO ESTRATÉGICA</span><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#dae2fd">Vença em menos de 8 jogadas · Lances: {{ moves }}/8</span></div></div>
+<div style="background:#222a3d;border-radius:12px;padding:6px 10px;display:flex;gap:8px;align-items:center"><div style="width:28px;height:28px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center;flex:none"><i style="font-size:15px;color:#ffb95f">target</i></div><div style="min-width:0"><span style="display:block;font-size:9px;font-weight:800;letter-spacing:1px;color:#ffb95f">MISSÃO ESTRATÉGICA</span><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#dae2fd">Vença em menos de 8 jogadas · {{ moves }}/8</span></div></div>
 </sc-if>
 <div style="width:100%;display:flex;justify-content:center">
 <div style="{{ boardStyle }}">
-<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:12px;width:100%;height:100%">
+<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px;width:100%;height:100%">
 <sc-for list="{{ cells }}" as="c" hint-placeholder-count="9">
 <button onClick="{{ c.onClick }}" style="{{ c.style }}">
-<sc-if value="{{ c.isX }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ xShadow }});animation:drop .18s ease-out"><line x1="22" y1="22" x2="78" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="78" y1="22" x2="22" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="24" y1="20" x2="76" y2="72" stroke="#ffffff" stroke-width="4" opacity=".55" stroke-linecap="round"></line></svg></sc-if>
-<sc-if value="{{ c.isO }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ oShadow }});animation:drop .18s ease-out"><circle cx="50" cy="50" r="28" fill="none" stroke="{{ oColor }}" stroke-width="16"></circle><circle cx="50" cy="48" r="28" fill="none" stroke="#ffffff" stroke-width="3" opacity=".5"></circle></svg></sc-if>
-<sc-if value="{{ c.isEmpty }}"><i style="font-size:30px;color:{{ c.plusColor }};opacity:{{ c.plusOpacity }}">add</i></sc-if>
+<sc-if value="{{ c.isX }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 4px 0 {{ xShadow }});animation:drop .18s ease-out"><line x1="22" y1="22" x2="78" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="78" y1="22" x2="22" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="24" y1="20" x2="76" y2="72" stroke="#ffffff" stroke-width="4" opacity=".55" stroke-linecap="round"></line></svg></sc-if>
+<sc-if value="{{ c.isO }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 4px 0 {{ oShadow }});animation:drop .18s ease-out"><circle cx="50" cy="50" r="28" fill="none" stroke="{{ oColor }}" stroke-width="16"></circle><circle cx="50" cy="48" r="28" fill="none" stroke="#ffffff" stroke-width="3" opacity=".5"></circle></svg></sc-if>
+<sc-if value="{{ c.isEmpty }}"><i style="font-size:24px;color:{{ c.plusColor }};opacity:{{ c.plusOpacity }}">add</i></sc-if>
 </button>
 </sc-for>
 <sc-if value="{{ hasWinLine }}" hint-placeholder-val="{{ false }}">
@@ -206,13 +251,13 @@ a:hover{color:#d8e2ff}
 </sc-if>
 </div>
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,14,32,.55);border-radius:28px"><span style="font-size:46px;font-weight:900;color:#ffb95f;text-shadow:0 6px 0 #653e00;animation:ready .8s ease-out">{{ readyText }}</span></div>
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,14,32,.55);border-radius:22px"><span style="font-size:36px;font-weight:900;color:#ffb95f;text-shadow:0 4px 0 #653e00;animation:ready .8s ease-out">{{ readyText }}</span></div>
 </sc-if>
 </div>
 </div>
-<div style="display:flex;gap:12px">
-<button onClick="{{ restart }}" style="flex:1;height:56px;border-radius:999px;background:#2d3449;color:#dae2fd;box-shadow:0 4px 0 #060e20;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:800"><i style="font-size:20px">refresh</i>Reiniciar</button>
-<button onClick="{{ hint }}" style="flex:1;height:56px;border-radius:999px;background:#ffb95f;color:#472a00;box-shadow:0 4px 0 #ca8100;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:800"><i style="font-size:20px">lightbulb</i>Dica ({{ hints }})</button>
+<div style="display:flex;gap:10px">
+<button onClick="{{ restart }}" style="flex:1;height:46px;border-radius:999px;background:#2d3449;color:#dae2fd;box-shadow:0 3px 0 #060e20;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800"><i style="font-size:18px">refresh</i>Reiniciar</button>
+<button onClick="{{ hint }}" style="flex:1;height:46px;border-radius:999px;background:#ffb95f;color:#472a00;box-shadow:0 3px 0 #ca8100;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:800"><i style="font-size:18px">lightbulb</i>Dica ({{ hints }})</button>
 </div>
 </div>
 </sc-if>
@@ -239,7 +284,7 @@ a:hover{color:#d8e2ff}
 <div style="display:flex;align-items:center;gap:8px;background:#171f33;padding:8px 14px;border-radius:999px"><span style="font-size:15px;font-weight:900;color:#adc6ff">{{ scoreP1 }}</span><span style="font-size:10px;font-weight:800;color:#c2c6d6;letter-spacing:.5px">MELHOR DE 5</span><span style="font-size:15px;font-weight:900;color:#d0bcff">{{ scoreP2 }}</span></div>
 </div>
 <div style="{{ boardStyle }}">
-<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:12px;width:100%;height:100%">
+<div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:8px;width:100%;height:100%">
 <sc-for list="{{ cells }}" as="c" hint-placeholder-count="9">
 <button onClick="{{ c.onClick }}" style="{{ c.style }}">
 <sc-if value="{{ c.isX }}"><svg viewBox="0 0 100 100" style="width:100%;height:100%;filter:drop-shadow(0 6px 0 {{ xShadow }});animation:drop .18s ease-out"><line x1="22" y1="22" x2="78" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line><line x1="78" y1="22" x2="22" y2="78" stroke="{{ xColor }}" stroke-width="16" stroke-linecap="round"></line></svg></sc-if>
@@ -272,34 +317,67 @@ a:hover{color:#d8e2ff}
 <sc-if value="{{ isLobby }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:12px">
 <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ goModos }}" style="width:40px;height:40px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#dae2fd">arrow_back</i></button><span style="font-size:19px;font-weight:900;color:#dae2fd;letter-spacing:-.4px">Lobby de Pareamento Local</span></div>
-<div style="background:#171f33;border-radius:20px;padding:12px;display:flex;align-items:center;gap:10px"><div style="width:44px;height:44px;border-radius:14px;background:#ca8100;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#3e2400">smart_toy</i></div><div style="flex:1"><span style="display:block;font-size:10px;font-weight:800;color:#ffb95f;letter-spacing:1px">VOCÊ ESTÁ VISÍVEL ●</span><span style="font-size:15px;font-weight:800;color:#dae2fd">Lucas (Nível {{ lvl }})</span><span style="display:block;font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f">ID: #TIC-8824 • Host Aberto</span></div><i style="font-size:18px;color:#8c909f">edit</i></div>
+<div style="background:#171f33;border-radius:20px;padding:12px;display:flex;align-items:center;gap:10px">
+  <div style="width:44px;height:44px;border-radius:14px;background:#ca8100;display:flex;align-items:center;justify-content:center"><i style="font-size:24px;color:#3e2400">smart_toy</i></div>
+  <div style="flex:1;min-width:0">
+    <span style="display:block;font-size:10px;font-weight:800;color:#ffb95f;letter-spacing:1px">VOCÊ ESTÁ VISÍVEL ●</span>
+    <span style="font-size:15px;font-weight:800;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ playerName }} (Nv. {{ lvl }})</span>
+    <span style="display:block;font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f">ID: #TIC-{{ playerTag }} • Host Aberto</span>
+  </div>
+  <button onClick="{{ openNameModal }}" style="background:#222a3d;color:#adc6ff;border:0;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:4px"><i style="font-size:15px">edit</i>Editar</button>
+</div>
 <div style="display:flex;background:#131b2e;padding:6px;border-radius:999px;gap:6px">
 <sc-for list="{{ lobbyTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.onClick }}" style="{{ t.style }}"><i style="font-size:16px">{{ t.icon }}</i>{{ t.name }}</button></sc-for>
 </div>
-<div style="background:#131b2e;border-radius:24px;padding:26px;display:flex;flex-direction:column;align-items:center;gap:8px">
-<div style="position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center"><div style="position:absolute;inset:0;border-radius:999px;background:rgba(77,142,255,.25);animation:ring 2s infinite"></div><div style="width:60px;height:60px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center"><i style="font-size:30px;color:#00285d">{{ lobbyIcon }}</i></div></div>
-<span style="font-size:17px;font-weight:800;color:#dae2fd">● {{ lobbyState }}</span>
+
+<sc-if value="{{ hasActiveRoom }}" hint-placeholder-val="{{ false }}">
+<div style="background:linear-gradient(135deg,#241c38,#171f33);border:1px solid #ffb95f;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 0 24px rgba(255,185,95,.25)">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="width:10px;height:10px;border-radius:999px;background:#4ade80;animation:pulse 1.2s infinite"></span>
+      <span style="font-size:11px;font-weight:800;color:#ffb95f;letter-spacing:1px">SUA SALA PRIVADA ESTÁ ABERTA</span>
+    </div>
+    <span style="font-size:11px;font-weight:800;color:#adc6ff;background:#222a3d;padding:3px 9px;border-radius:999px">PIN #{{ activeRoomCode }}</span>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <span style="display:block;font-size:18px;font-weight:900;color:#dae2fd">{{ activeRoomName }}</span>
+      <span style="font-size:12px;font-weight:700;color:#c2c6d6">Senha da Sala: <b style="color:#ffddb8;background:#3a2910;padding:2px 8px;border-radius:6px;letter-spacing:1px;font-size:13px">{{ activeRoomPass }}</b></span>
+    </div>
+    <div style="width:42px;height:42px;border-radius:14px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:22px;color:#ffb95f">meeting_room</i></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:2px">
+    <button onClick="{{ startRoomMatch }}" style="flex:1;height:46px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 4px 0 #653e00;color:#3e2400;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:6px"><i style="font-size:20px">play_arrow</i> Iniciar Partida</button>
+    <button onClick="{{ closeActiveRoom }}" style="height:46px;padding:0 14px;border-radius:999px;background:#3a1418;color:#ffb4ab;font-size:12px;font-weight:800;display:flex;align-items:center;gap:4px"><i style="font-size:16px">close</i> Fechar Sala</button>
+  </div>
+</div>
+</sc-if>
+
+<div style="background:#131b2e;border-radius:24px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:8px">
+<div style="position:relative;width:86px;height:86px;display:flex;align-items:center;justify-content:center"><div style="position:absolute;inset:0;border-radius:999px;background:rgba(77,142,255,.25);animation:ring 2s infinite"></div><div style="width:54px;height:54px;border-radius:999px;background:#4d8eff;display:flex;align-items:center;justify-content:center"><i style="font-size:28px;color:#00285d">{{ lobbyIcon }}</i></div></div>
+<span style="font-size:16px;font-weight:800;color:#dae2fd">● {{ lobbyState }}</span>
 <span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#8c909f">Buscando oponentes na mesma rede local…</span>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<button onClick="{{ createRoom }}" style="height:74px;border-radius:22px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i style="font-size:22px;color:#3e2400">add_circle</i><span style="font-size:14px;font-weight:900;color:#3e2400">Criar Sala</span><span style="font-size:10px;font-weight:700;color:#653e00">Gerar PIN ou QR</span></button>
+<button onClick="{{ openCreateRoomModal }}" style="height:74px;border-radius:22px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 6px 0 #653e00;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i style="font-size:22px;color:#3e2400">add_circle</i><span style="font-size:14px;font-weight:900;color:#3e2400">Criar Sala</span><span style="font-size:10px;font-weight:700;color:#653e00">Com Nome &amp; Senha</span></button>
 <button onClick="{{ rescan }}" style="height:74px;border-radius:22px;background:#222a3d;box-shadow:0 6px 0 #131b2e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i style="font-size:22px;color:#adc6ff">sync</i><span style="font-size:14px;font-weight:900;color:#dae2fd">Atualizar Lista</span><span style="font-size:10px;font-weight:700;color:#8c909f">Varredura ativa</span></button>
 </div>
 <div style="background:#171f33;border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px">
-<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:800;color:#dae2fd">⠿ Digite o Código da Sala</span><span style="font-size:10px;font-weight:700;color:#8c909f">PIN de 4 dígitos</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:800;color:#dae2fd">⠿ Conectar por Senha ou PIN</span><span style="font-size:10px;font-weight:700;color:#8c909f">4 dígitos</span></div>
 <div style="display:flex;gap:8px;align-items:center">
 <sc-for list="{{ pinCells }}" as="p" hint-placeholder-count="4"><div style="{{ p.style }}">{{ p.ch }}</div></sc-for>
 <button onClick="{{ connectPin }}" style="flex:1;height:44px;border-radius:14px;background:#4d8eff;color:#fff;font-size:13px;font-weight:800">Conectar →</button>
+<button onClick="{{ clearPin }}" style="width:40px;height:44px;border-radius:14px;background:#222a3d;color:#ffb4ab;display:flex;align-items:center;justify-content:center"><i style="font-size:18px">backspace</i></button>
 </div>
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
 <sc-for list="{{ keypad }}" as="k" hint-placeholder-count="10"><button onClick="{{ k.onClick }}" style="height:34px;border-radius:10px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">{{ k.n }}</button></sc-for>
 </div>
 </div>
-<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:16px;font-weight:800;color:#dae2fd">Jogadores Próximos <span style="font-size:11px;background:#222a3d;padding:2px 8px;border-radius:999px;color:#c2c6d6">3</span></span><span style="font-size:11px;font-weight:700;color:#10b981">● Sinal Ativo</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:16px;font-weight:800;color:#dae2fd">Salas &amp; Jogadores Próximos <span style="font-size:11px;background:#222a3d;padding:2px 8px;border-radius:999px;color:#c2c6d6">{{ peersCount }}</span></span><span style="font-size:11px;font-weight:700;color:#10b981">● Sinal Ativo</span></div>
 <sc-for list="{{ peers }}" as="p" hint-placeholder-count="3">
-<div style="background:#171f33;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:10px"><div style="{{ p.iconStyle }}"><i style="font-size:20px;color:#dae2fd">{{ p.icon }}</i></div><div style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:800;color:{{ p.nameColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span><span style="font-size:11px;font-weight:700;color:{{ p.stateColor }}">{{ p.state }} • {{ p.ping }}</span></div><button onClick="{{ p.onClick }}" style="{{ p.btnStyle }}">{{ p.action }}</button></div>
+<div style="background:#171f33;border-radius:18px;padding:10px 12px;display:flex;align-items:center;gap:10px"><div style="{{ p.iconStyle }}"><i style="font-size:20px;color:#dae2fd">{{ p.icon }}</i></div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:4px"><span style="display:block;font-size:14px;font-weight:800;color:{{ p.nameColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span><sc-if value="{{ p.hasLock }}"><i style="font-size:14px;color:#ffb95f">lock</i></sc-if></div><span style="font-size:11px;font-weight:700;color:{{ p.stateColor }}">{{ p.state }} • {{ p.ping }}</span></div><button onClick="{{ p.onClick }}" style="{{ p.btnStyle }}">{{ p.action }}</button></div>
 </sc-for>
-<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;gap:8px"><i style="font-size:18px;color:#8c909f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f;line-height:16px">Certifique-se de que ambos estão conectados na mesma rede Wi-Fi ou com o Bluetooth ativado para pareamento instantâneo.</span></div>
+<div style="background:#131b2e;border-radius:16px;padding:12px;display:flex;gap:8px"><i style="font-size:18px;color:#8c909f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:11px;font-weight:600;color:#8c909f;line-height:16px">Crie uma sala com nome e senha para que seu amigo ao lado possa conectar e jogar junto.</span></div>
 </div>
 </sc-if>
 
@@ -381,7 +459,7 @@ a:hover{color:#d8e2ff}
 <sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:12px">
 <div style="background:#171f33;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:10px">
-<div style="display:flex;align-items:center;gap:12px"><div style="width:64px;height:64px;border-radius:999px;background:linear-gradient(135deg,#571bc1,#4d8eff);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #ffb95f"><i style="font-size:34px;color:#dae2fd">face</i></div><div style="flex:1"><span style="display:block;font-size:19px;font-weight:900;color:#dae2fd">Mestre da Trinca <span style="font-size:11px;color:#8c909f">#8492</span></span><span style="font-size:11px;font-weight:800;color:#ffb95f">🏅 Patente: Casual</span><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:11px;font-weight:800;color:#3e2400;background:#ffb95f;padding:2px 8px;border-radius:999px">⚡ Nv. {{ lvl }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">Ⓢ {{ coins }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">🏆 {{ trophies }}</span></div></div></div>
+<div style="display:flex;align-items:center;gap:12px"><div style="width:64px;height:64px;border-radius:999px;background:linear-gradient(135deg,#571bc1,#4d8eff);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #ffb95f"><i style="font-size:34px;color:#dae2fd">face</i></div><div style="flex:1;min-width:0"><span style="display:block;font-size:19px;font-weight:900;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ playerName }} <span style="font-size:11px;color:#8c909f">#{{ playerTag }}</span></span><button onClick="{{ openNameModal }}" style="background:#222a3d;color:#ffb95f;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px;margin-top:3px;border:0"><i style="font-size:14px">edit</i> Mudar Nome</button><div style="display:flex;gap:8px;margin-top:4px"><span style="font-size:11px;font-weight:800;color:#3e2400;background:#ffb95f;padding:2px 8px;border-radius:999px">⚡ Nv. {{ lvl }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">Ⓢ {{ coins }}</span><span style="font-size:11px;font-weight:800;color:#dae2fd;background:#222a3d;padding:2px 8px;border-radius:999px">🏆 {{ trophies }}</span></div></div></div>
 <div style="background:#131b2e;border-radius:14px;padding:10px"><div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:#c2c6d6"><span>★ PROGRESSO XP</span><span style="color:#ffb95f">{{ xp }} / 2.000 XP ({{ xpPct }})</span></div><div style="width:100%;height:10px;border-radius:999px;background:#2d3449;margin-top:6px;padding:2px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#ca8100,#ffddb8);width:{{ xpPct }}"></div></div></div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -404,6 +482,16 @@ a:hover{color:#d8e2ff}
 <div style="display:flex;flex-direction:column;gap:12px">
 <div style="display:flex;align-items:center;gap:10px"><button onClick="{{ goHome }}" style="width:40px;height:40px;border-radius:999px;background:#222a3d;display:flex;align-items:center;justify-content:center"><i style="font-size:20px;color:#dae2fd">arrow_back</i></button><span style="font-size:20px;font-weight:900;color:#dae2fd">Configurações</span></div>
 <div><span style="font-size:10px;font-weight:800;letter-spacing:1.2px;color:#ffb95f">PAINEL DE CONTROLE</span><h2 style="margin:2px 0 0;font-size:26px;font-weight:900;color:#dae2fd">Preferências</h2><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#8c909f">Personalize som, vibração e dinâmica arcade</span></div>
+<div style="background:#171f33;border-radius:20px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+    <div style="width:40px;height:40px;border-radius:999px;background:#00285d;border:1px solid #4d8eff;display:flex;align-items:center;justify-content:center;flex:none"><i style="font-size:20px;color:#adc6ff">badge</i></div>
+    <div style="min-width:0">
+      <span style="display:block;font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">NOME DE JOGADOR</span>
+      <span style="font-size:15px;font-weight:900;color:#dae2fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">{{ playerName }}</span>
+    </div>
+  </div>
+  <button onClick="{{ openNameModal }}" style="background:#222a3d;color:#adc6ff;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;border:0;display:flex;align-items:center;gap:4px;flex:none"><i style="font-size:15px">edit</i>Alterar</button>
+</div>
 <sc-for list="{{ settings }}" as="g" hint-placeholder-count="3">
 <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11px;font-weight:800;letter-spacing:1.2px;color:#c2c6d6">{{ g.title }}</span>
 <sc-for list="{{ g.items }}" as="s" hint-placeholder-count="3">
@@ -420,7 +508,7 @@ a:hover{color:#d8e2ff}
 </div>
 
 <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
-<div style="position:absolute;left:0;right:0;bottom:0;height:72px;background:rgba(11,19,38,.92);backdrop-filter:blur(12px);border-top:1px solid #1c2338;display:flex;align-items:center;justify-content:space-around;padding:0 12px;z-index:30">
+<div style="position:absolute;left:0;right:0;bottom:0;height:60px;background:rgba(11,19,38,.94);backdrop-filter:blur(12px);border-top:1px solid #1c2338;display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:30">
 <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
 <button onClick="{{ n.onClick }}" style="{{ n.style }}"><i style="font-size:22px">{{ n.icon }}</i><span style="font-size:11px;font-weight:800">{{ n.name }}</span></button>
 </sc-for>
@@ -515,6 +603,88 @@ a:hover{color:#d8e2ff}
 </div>
 </sc-if>
 
+<sc-if value="{{ modalName }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.88);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border:1px solid #4d8eff;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;animation:pop .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 50px rgba(77,142,255,.3)">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:42px;height:42px;border-radius:999px;background:#00285d;border:1px solid #4d8eff;display:flex;align-items:center;justify-content:center"><i style="font-size:22px;color:#adc6ff">badge</i></div>
+      <div>
+        <span style="font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">IDENTIDADE ARCADE</span>
+        <h3 style="margin:0;font-size:18px;font-weight:900;color:#dae2fd">Nome de Jogador</h3>
+      </div>
+    </div>
+    <button onClick="{{ closeModal }}" style="width:34px;height:34px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">✕</button>
+  </div>
+  <span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6">Digite como seu nome aparecerá nas partidas e nos duelos:</span>
+  <input type="text" value="{{ nameInputValue }}" onChange="{{ onNameInputChange }}" maxlength="18" placeholder="Ex: Danilo" style="width:100%;height:48px;border-radius:14px;background:#131b2e;border:2px solid #4d8eff;color:#dae2fd;padding:0 14px;font-size:16px;font-weight:800;font-family:inherit;outline:none">
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <sc-for list="{{ namePresets }}" as="p" hint-placeholder-count="3">
+      <button onClick="{{ p.onClick }}" style="background:#222a3d;color:#adc6ff;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700">{{ p.name }}</button>
+    </sc-for>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:4px">
+    <button onClick="{{ saveName }}" style="flex:1;height:48px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 4px 0 #653e00;color:#3e2400;font-size:14px;font-weight:900">✓ Salvar Nome</button>
+    <button onClick="{{ closeModal }}" style="height:48px;padding:0 16px;border-radius:999px;background:#222a3d;color:#c2c6d6;font-size:13px;font-weight:700">Cancelar</button>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalCreateRoom }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.88);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border:1px solid #ffb95f;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;animation:pop .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 50px rgba(255,185,95,.25)">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:42px;height:42px;border-radius:999px;background:#653e00;display:flex;align-items:center;justify-content:center"><i style="font-size:22px;color:#ffb95f">meeting_room</i></div>
+      <div>
+        <span style="font-size:10px;font-weight:800;letter-spacing:1px;color:#ffb95f">PAREAMENTO LOCAL</span>
+        <h3 style="margin:0;font-size:18px;font-weight:900;color:#dae2fd">Criar Sala com Senha</h3>
+      </div>
+    </div>
+    <button onClick="{{ closeModal }}" style="width:34px;height:34px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">✕</button>
+  </div>
+  <span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6">Crie uma sala privada definindo o nome e a senha de acesso:</span>
+  <div>
+    <span style="display:block;font-size:11px;font-weight:800;color:#adc6ff;margin-bottom:4px">🏷 NOME DA SALA</span>
+    <input type="text" value="{{ roomNameInputValue }}" onChange="{{ onRoomNameInputChange }}" maxlength="24" placeholder="Ex: Sala do Danilo" style="width:100%;height:46px;border-radius:12px;background:#131b2e;border:1px solid #2d3449;color:#dae2fd;padding:0 12px;font-size:14px;font-weight:800;font-family:inherit;outline:none">
+  </div>
+  <div>
+    <span style="display:block;font-size:11px;font-weight:800;color:#ffb95f;margin-bottom:4px">🔒 SENHA DA SALA</span>
+    <input type="text" value="{{ roomPassInputValue }}" onChange="{{ onRoomPassInputChange }}" maxlength="12" placeholder="Ex: 1234" style="width:100%;height:46px;border-radius:12px;background:#131b2e;border:1px solid #653e00;color:#ffddb8;padding:0 12px;font-size:15px;font-weight:900;letter-spacing:2px;font-family:inherit;outline:none">
+    <span style="display:block;font-size:10px;font-weight:600;color:#8c909f;margin-top:3px">Diga essa senha para quem for jogar com você</span>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:4px">
+    <button onClick="{{ confirmCreateRoom }}" style="flex:1;height:48px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 4px 0 #653e00;color:#3e2400;font-size:14px;font-weight:900">✓ Abrir Sala</button>
+    <button onClick="{{ closeModal }}" style="height:48px;padding:0 16px;border-radius:999px;background:#222a3d;color:#c2c6d6;font-size:13px;font-weight:700">Cancelar</button>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modalJoinRoom }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(6,14,32,.88);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px">
+<div style="width:100%;background:#1b2237;border:1px solid #4d8eff;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:12px;animation:pop .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 50px rgba(77,142,255,.25)">
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:42px;height:42px;border-radius:999px;background:#00285d;display:flex;align-items:center;justify-content:center"><i style="font-size:22px;color:#adc6ff">lock</i></div>
+      <div>
+        <span style="font-size:10px;font-weight:800;letter-spacing:1px;color:#adc6ff">SALA COM SENHA</span>
+        <h3 style="margin:0;font-size:17px;font-weight:900;color:#dae2fd">{{ joinRoomTargetName }}</h3>
+      </div>
+    </div>
+    <button onClick="{{ closeModal }}" style="width:34px;height:34px;border-radius:999px;background:#222a3d;color:#dae2fd;font-size:14px;font-weight:800">✕</button>
+  </div>
+  <span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:600;color:#c2c6d6">Digite a senha da sala para entrar no jogo:</span>
+  <input type="text" value="{{ joinPassInputValue }}" onChange="{{ onJoinPassInputChange }}" maxlength="12" placeholder="Digite a senha" style="width:100%;height:48px;border-radius:12px;background:#131b2e;border:2px solid #4d8eff;color:#dae2fd;padding:0 14px;font-size:16px;font-weight:900;letter-spacing:2px;font-family:inherit;outline:none">
+  <div style="display:flex;gap:10px;margin-top:4px">
+    <button onClick="{{ confirmJoinRoom }}" style="flex:1;height:48px;border-radius:999px;background:linear-gradient(180deg,#ffddb8,#ffb95f);box-shadow:0 4px 0 #653e00;color:#3e2400;font-size:14px;font-weight:900">Entrar na Sala →</button>
+    <button onClick="{{ closeModal }}" style="height:48px;padding:0 16px;border-radius:999px;background:#222a3d;color:#c2c6d6;font-size:13px;font-weight:700">Cancelar</button>
+  </div>
+</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:16px;right:16px;bottom:96px;z-index:60;background:#222a3d;border-radius:16px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.5);display:flex;align-items:center;gap:10px;animation:drop .2s ease-out"><i style="font-size:20px;color:#ffb95f">info</i><span style="font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;color:#dae2fd">{{ toastText }}</span></div>
 </sc-if>
@@ -526,7 +696,7 @@ a:hover{color:#d8e2ff}
 class Component extends DCLogic {
   constructor(props){
     super(props);
-    const def={coins:0,trophies:0,xp:0,level:1,lives:10,volSfx:80,volMenu:25,volGame:45,pass:false,lifeAt:0,resetV3:true,streak:0,wins:0,losses:0,draws:0,games:0,phase:1,skin:'neon',owned:['neon','chama'],sfx:true,music:true,audioMigrated:2,haptics:true,confirm:false,particles:true,nDaily:true,nLives:true,nSeason:false,m1:0,m2:0,m3:0,daily:0,board:'classico',aura:'brilho',ownedBoards:['classico','oceano'],ownedAuras:['nenhuma','brilho']};
+    const def={coins:0,trophies:0,xp:0,level:1,lives:10,volSfx:80,volMenu:25,volGame:45,pass:false,lifeAt:0,resetV3:true,streak:0,wins:0,losses:0,draws:0,games:0,phase:1,skin:'neon',owned:['neon','chama'],sfx:true,music:true,audioMigrated:2,haptics:true,confirm:false,particles:true,nDaily:true,nLives:true,nSeason:false,m1:0,m2:0,m3:0,daily:0,missionCooldowns:{},playerName:'Danilo',playerTag:'8492',board:'classico',aura:'brilho',ownedBoards:['classico','oceano'],ownedAuras:['nenhuma','brilho']};
     let save=def;
     try{
       const r=localStorage.getItem('jdv_arcade_v1');
@@ -540,14 +710,33 @@ class Component extends DCLogic {
           if(!(save.volGame>0))save.volGame=def.volGame;
           if(!(save.volSfx>0))save.volSfx=def.volSfx;
         }
+        if(!save.playerName)save.playerName='Danilo';
+        if(!save.playerTag)save.playerTag='8492';
+        if(!save.missionCooldowns)save.missionCooldowns={};
         try{localStorage.setItem('jdv_arcade_v1',JSON.stringify(save));}catch(e2){}
       }
     }catch(e){}
-    this.state={save,screen:'home',mode:'bot',diff:'medio',fmt:'bot',starter:'voce',bestOf:'1',board:Array(9).fill(null),turn:'X',lock:false,win:null,result:null,moves:0,elapsed:0,turnTime:15,hints:3,scoreP1:0,scoreP2:0,phasePlay:null,modal:null,ready:null,confetti:[],toast:null,shopTab:'pecas',dTab:'diarias',duelTab:'mesa',lobbyTab:'wifi',clock:'15s',pin:'',reactionShown:'',rewardCoins:0,rewardXp:0,flip:true,hintCell:null};
+    this.state={save,screen:'home',mode:'bot',diff:'medio',fmt:'bot',starter:'voce',bestOf:'1',board:Array(9).fill(null),turn:'X',lock:false,win:null,result:null,moves:0,elapsed:0,turnTime:15,hints:3,scoreP1:0,scoreP2:0,phasePlay:null,modal:null,ready:null,confetti:[],toast:null,shopTab:'pecas',dTab:'diarias',duelTab:'mesa',lobbyTab:'wifi',clock:'15s',pin:'',reactionShown:'',rewardCoins:0,rewardXp:0,flip:true,hintCell:null,nameInput:save.playerName||'Danilo',createdRoom:null,roomNameInput:'',roomPassInput:'',joinPassInput:'',selectedRoomToJoin:null,nowTick:Date.now()};
   }
   componentDidMount(){
     this.t=setInterval(()=>{
       const s=this.state;
+      const now=Date.now();
+      const cd=s.save.missionCooldowns;
+      if(cd&&Object.keys(cd).length>0){
+        let expired=false;
+        const freshCd=Object.assign({},cd);
+        Object.keys(cd).forEach(k=>{
+          if(now>=cd[k]){
+            delete freshCd[k];
+            expired=true;
+          }
+        });
+        if(expired){
+          this.put({missionCooldowns:freshCd});
+        }
+      }
+      this.setState({nowTick:now});
       if((s.screen==='match'||s.screen==='duel')&&!s.result&&!s.modal&&!s.ready){
         const e=s.elapsed+1;
         if(s.clock==='Livre'||s.lock){this.setState({elapsed:e});return;}
@@ -787,7 +976,11 @@ class Component extends DCLogic {
     const sv=s.save;let patch={games:sv.games+1};let coins=0,xp=0;
     if(res==='win'){coins=s.phasePlay?120:100;xp=s.phasePlay?200:150;patch.wins=sv.wins+1;
       if(w.line&&w.line[1]===4&&(w.line[0]===0||w.line[0]===2))patch.acDiag=(sv.acDiag||0)+1;
-      if(s.diff==='insano')patch.acInsano=(sv.acInsano||0)+1;patch.streak=sv.streak+1;patch.trophies=sv.trophies+5;patch.daily=Math.min(1,(sv.daily||0)+1);patch.m1=Math.min(1,sv.m1+1);patch.m2=Math.min(3,sv.m2+1);
+      if(s.diff==='insano')patch.acInsano=(sv.acInsano||0)+1;patch.streak=sv.streak+1;patch.trophies=sv.trophies+5;
+      const cd=sv.missionCooldowns||{};const nowTime=Date.now();
+      if(!cd.daily||nowTime>=cd.daily)patch.daily=Math.min(1,(sv.daily||0)+1);
+      if(!cd.m1||nowTime>=cd.m1)patch.m1=Math.min(1,(sv.m1||0)+1);
+      if(!cd.m2||nowTime>=cd.m2)patch.m2=Math.min(3,(sv.m2||0)+1);
       if(s.phasePlay&&s.phasePlay===sv.phase)patch.phase=Math.min(10,sv.phase+1);}
     else if(res==='lose'){coins=5;xp=5;patch.losses=sv.losses+1;patch.streak=0;
       if(s.mode!=='local'){patch.lives=Math.max(0,sv.lives-1);patch.lifeAt=sv.lifeAt&&sv.lives<10?sv.lifeAt:Date.now()+this.RECHARGE;}}
@@ -885,7 +1078,7 @@ class Component extends DCLogic {
     const cells=[];
     for(let i=0;i<9;i++){
       const v=s.board[i],winCell=line&&line.indexOf(i)>=0;
-      let st='width:100%;height:100%;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:8px;position:relative;transition:transform .1s;';
+      let st='width:100%;height:100%;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:4px;position:relative;transition:transform .1s;';
       if(v)st+='background:'+bd.slot+';box-shadow:inset 0 4px 6px rgba(0,0,0,.45)'+(sv.aura!=='nenhuma'?',0 0 18px '+au.glow:'')+';';
       else st+='background:'+bd.cell+';box-shadow:0 6px 0 rgba(0,0,0,.45);';
       if(winCell)st+='box-shadow:inset 0 4px 6px rgba(0,0,0,.45),0 0 26px rgba(255,185,95,.75);';
@@ -961,22 +1154,56 @@ class Component extends DCLogic {
       {id:'s3',name:'Nível 3 — Tabuleiro Cósmico',desc:'Alcance 1.500 XP e leve o tabuleiro lendário da temporada.',cur:sv.xp,goal:1500,gold:0,xp:0,icon:'looks_3',bg:'#571bc1',bar:'#d0bcff',grant:{ownedBoards:'cosmico'},pass:true},
       {id:'s4',name:'Nível 4 — Galáxia Estelar',desc:'Alcance 2.000 XP e desbloqueie o conjunto de peças da temporada.',cur:sv.xp,goal:2000,gold:500,xp:0,icon:'looks_4',bg:'#1e40af',bar:'#adc6ff',grant:{owned:'galaxia'},pass:true}
     ];
+    const now=Date.now();
+    const formatRemaining=(ms)=>{
+      if(ms<=0)return '00h 00m';
+      const totalSec=Math.floor(ms/1000);
+      const h=Math.floor(totalSec/3600);
+      const m=Math.floor((totalSec%3600)/60);
+      return (h<10?'0':'')+h+'h '+(m<10?'0':'')+m+'m';
+    };
+    const missionCds=sv.missionCooldowns||{};
     const activeDefs=s.dTab==='conquistas'?achieveDefs:(s.dTab==='temporada'?seasonDefs:missionDefs);
     const claimed=sv.claimed||[];
     const missions=activeDefs.map(m=>{
-      const cur=Math.min(m.cur,m.goal),done=cur>=m.goal,got=claimed.indexOf(m.id)>=0;
-      return {...m,prog:cur+'/'+m.goal,pct:Math.round(cur/m.goal*100)+'%',barColor:m.bar,hasGold:m.gold>0,hasXp:m.xp>0,
-        iconStyle:'width:44px;height:44px;border-radius:14px;background:'+m.bg+';display:flex;align-items:center;justify-content:center;flex:none',
-        btnStyle:'margin-left:auto;padding:9px 18px;border-radius:999px;font-size:12px;font-weight:800;background:'+(got?'#222a3d':(done?'linear-gradient(180deg,#ffddb8,#ca8100)':'#4d8eff'))+';color:'+(got?'#8c909f':(done?'#3e2400':'#fff')),
-        action:got?'✓ COLETADO':(m.pass&&!sv.pass?'🔒 PASSE':(done?'Ⓢ COLETAR':'JOGAR ▶')),
+      const cdTime=(s.dTab==='diarias'&&missionCds[m.id])||0;
+      const inCooldown=cdTime>now;
+      const remText=inCooldown?formatRemaining(cdTime-now):'';
+      const cur=inCooldown?0:Math.min(m.cur,m.goal);
+      const done=!inCooldown&&cur>=m.goal;
+      const got=claimed.indexOf(m.id)>=0;
+      let actionLabel='JOGAR ▶';
+      if(inCooldown)actionLabel='⏳ '+remText;
+      else if(got)actionLabel='✓ COLETADO';
+      else if(m.pass&&!sv.pass)actionLabel='🔒 PASSE';
+      else if(done)actionLabel='Ⓢ COLETAR';
+      const btnBg=inCooldown?'#222a3d':(got?'#222a3d':(done?'linear-gradient(180deg,#ffddb8,#ca8100)':'#4d8eff'));
+      const btnCol=inCooldown?'#ffb95f':(got?'#8c909f':(done?'#3e2400':'#fff'));
+      return {...m,
+        prog:inCooldown?('0/'+m.goal):(cur+'/'+m.goal),
+        pct:inCooldown?'0%':(Math.round(cur/m.goal*100)+'%'),
+        desc:inCooldown?('Missão concluída! Retorna em '+remText):m.desc,
+        barColor:inCooldown?'#2d3449':m.bar,
+        hasGold:m.gold>0,hasXp:m.xp>0,
+        iconStyle:'width:44px;height:44px;border-radius:14px;background:'+(inCooldown?'#222a3d':m.bg)+';display:flex;align-items:center;justify-content:center;flex:none'+(inCooldown?';opacity:.6':''),
+        btnStyle:'margin-left:auto;padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;background:'+btnBg+';color:'+btnCol,
+        action:actionLabel,
         onClick:()=>{
+          if(inCooldown){this.say('Essa missão retornará em '+remText+' (recarga de 24h).');return;}
           if(got){this.say('Recompensa já coletada.');return;}
           if(m.pass&&!sv.pass){this.say('Recompensa exclusiva do Passe Ouro.');return;}
           if(!done){this.go('modos');return;}
           const patch={coins:sv.coins+m.gold,xp:sv.xp+m.xp};
-          if(m.reset)patch[m.reset]=0; else patch.claimed=claimed.concat([m.id]);
+          if(m.reset){
+            patch[m.reset]=0;
+            const fresh=Object.assign({},sv.missionCooldowns||{});
+            fresh[m.id]=Date.now()+86400000;
+            patch.missionCooldowns=fresh;
+          }else{
+            patch.claimed=claimed.concat([m.id]);
+          }
           if(m.grant){const k=Object.keys(m.grant)[0];patch[k]=(sv[k]||[]).concat([m.grant[k]]);}
-          this.put(patch);this.fanfare();this.say(m.gold?('+'+m.gold+' moedas coletadas!'):'Recompensa desbloqueada!');
+          this.put(patch);this.fanfare();this.say(m.gold?('+'+m.gold+' moedas coletadas! Missão recarrega em 24h.'):'Recompensa desbloqueada!');
         }};
     });
     const stats=[
@@ -1001,12 +1228,20 @@ class Component extends DCLogic {
       {title:'🔔 NOTIFICAÇÕES',items:[mk('nDaily','Missões Diárias','Aviso antes de expirar bônus do dia','notifications','#653e00'),mk('nLives','Vidas Recarregadas','Alerta quando o estoque encher','bolt','#1e40af'),mk('nSeason','Passes & Temporadas','Novidades de eventos e skins','emoji_events','#222a3d')]}
     ];
     const peers=[
-      {name:'Mariana (Galaxy S23)',state:'Excelente',ping:'12ms',icon:'smartphone',bg:'#571bc1',action:'Convidar',ok:true},
-      {name:'Pedro_Velha (iPhone 14)',state:'Em partida',ping:'28ms',icon:'smartphone',bg:'#222a3d',action:'Ocupado',ok:false},
-      {name:'Mesa do Carlos',state:'Sala Aberta',ping:'18ms',icon:'table_restaurant',bg:'#653e00',action:'Entrar',ok:true}
+      {name:'Mariana (Galaxy S23)',state:'Aberta • Sem Senha',ping:'12ms',icon:'smartphone',bg:'#571bc1',action:'Convidar',ok:true,pass:null},
+      {name:'Pedro_Velha (iPhone 14)',state:'Em partida',ping:'28ms',icon:'smartphone',bg:'#222a3d',action:'Ocupado',ok:false,pass:null},
+      {name:'Mesa do Carlos (Com Senha)',state:'Sala Privada',ping:'18ms',icon:'lock',bg:'#653e00',action:'Entrar',ok:true,pass:'1234'}
     ].map(p=>({...p,iconStyle:'width:40px;height:40px;border-radius:12px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;flex:none',nameColor:p.ok?'#dae2fd':'#8c909f',stateColor:p.ok?'#ffb95f':'#ffb4ab',
       btnStyle:'padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;background:'+(p.ok?(p.action==='Entrar'?'linear-gradient(180deg,#ffddb8,#ca8100)':'#4d8eff'):'#222a3d')+';color:'+(p.ok?(p.action==='Entrar'?'#3e2400':'#fff'):'#8c909f'),
-      onClick:()=>{if(!p.ok){this.say(p.name+' está em partida.');return;}this.say('Conectando com '+p.name+'…');setTimeout(()=>this.start({mode:'online'}),900);}}));
+      onClick:()=>{
+        if(!p.ok){this.say(p.name+' está ocupado no momento.');return;}
+        if(p.pass){
+          this.setState({modal:'joinRoom',selectedRoomToJoin:p,joinPassInput:''});
+          return;
+        }
+        this.say('Conectando com '+p.name+'…');
+        setTimeout(()=>this.start({mode:'online'}),900);
+      }}));
     const pinCells=[0,1,2,3].map(i=>({ch:s.pin[i]||'•',style:'width:38px;height:44px;border-radius:12px;background:#222a3d;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:'+(s.pin[i]?'#dae2fd':'#424754')}));
     const keypad=[1,2,3,4,5,6,7,8,9,0].map(n=>({n,onClick:()=>{if(s.pin.length<4){this.setState({pin:s.pin+n});this.beep(700,.04);}}}));
     const quickToggles=[['sfx','Efeitos','volume_up'],['music','Música','music_note'],['particles','Brilhos','auto_awesome']].map(([k,name,icon])=>({name,icon,style:'display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;border-radius:14px;background:#131b2e;color:'+(sv[k]?'#adc6ff':'#424754'),onClick:()=>this.toggle(k)}));
@@ -1020,6 +1255,14 @@ class Component extends DCLogic {
     const openMissions=missionDefs.filter(m=>m.cur<m.goal).length;
     const allDefs=missionDefs.concat(achieveDefs).concat(seasonDefs);
     const doneCount=allDefs.filter(m=>m.cur>=m.goal).length;
+    const dailyCdTime=missionCds.daily||0;
+    const dailyInCd=dailyCdTime>now;
+    const dailyRemText=dailyInCd?formatRemaining(dailyCdTime-now):'';
+    const dailyCanClaim=!dailyInCd&&((sv.daily||0)>=1);
+    const notDailyCanClaim=!dailyCanClaim;
+    const dailyStatusText=dailyInCd?('⏳ Nova missão em '+dailyRemText):(dailyCanClaim?'✓ Missão concluída! Toque para coletar':'Vença 1 partida no modo solo ou local');
+    const pName=sv.playerName||'Danilo';
+    const pTag=sv.playerTag||'8492';
     return {
       hub,showNav:hub,arena:screen==='match'||screen==='duel',
       isHome:screen==='home',isModos:screen==='modos',isMapa:screen==='mapa',isMatch:screen==='match',isDuel:screen==='duel',isLobby:screen==='lobby',isLoja:screen==='loja',isDesafios:screen==='desafios',isPerfil:screen==='perfil',isConfig:screen==='config',
@@ -1029,12 +1272,30 @@ class Component extends DCLogic {
       livesText:sv.lives+'/10',lifeTimer:this.lifeText(),livesFull:sv.lives>=10,livesLow:sv.lives<10,
       isTemporada:s.dTab==='temporada',passActive:!!sv.pass,passLabel:sv.pass?'✓ PASSE OURO ATIVO':'Ⓢ 1500 · ATIVAR PASSE',
       buyPass:()=>this.buyPass(),
-      dailyDone:sv.daily||0,dailyPct:((sv.daily||0)?100:8)+'%',openMissions,
+      dailyDone:dailyInCd?0:(sv.daily||0),dailyPct:dailyInCd?'0%':(((sv.daily||0)?100:8)+'%'),openMissions,
+      dailyCanClaim,notDailyCanClaim,dailyStatusText,
+      claimDaily:()=>{
+        const curNow=Date.now();
+        const cds=this.state.save.missionCooldowns||{};
+        if(cds.daily&&curNow<cds.daily){
+          this.say('Missão diária em espera de 24h: '+formatRemaining(cds.daily-curNow));
+          return;
+        }
+        if((this.state.save.daily||0)<1){
+          this.say('Vença 1 partida para concluir a missão!');
+          return;
+        }
+        const freshCds=Object.assign({},cds,{daily:curNow+86400000});
+        this.put({coins:this.state.save.coins+100,xp:this.state.save.xp+50,daily:0,missionCooldowns:freshCds});
+        this.fanfare();
+        this.say('🎉 +100 Moedas e +50 XP coletados! Nova missão em 24h.');
+      },
+      playerName:pName,playerTag:pTag,
       phase:sv.phase,phases,starsTotal:(sv.phase-1)*3,
       nav:nav.map(([id,icon,name])=>({icon,name,style:screen===id||(id==='perfil'&&screen==='config')?pillOn:pillOff,onClick:()=>this.go(id)})),
       formats,diffs,starters,series,diffName:(dlist.find(d=>d.id===s.diff)||{}).name,
       cells,xColor:sk.x,oColor:sk.o,xShadow:sk.xs||'#93000a',oShadow:sk.os||'#571bc1',
-      boardStyle:'width:100%;aspect-ratio:1/1;background:'+bd.bg+';border-radius:28px;padding:14px;box-shadow:0 12px 0 rgba(0,0,0,.55),0 20px 28px rgba(0,0,0,.5);position:relative',
+      boardStyle:'width:100%;max-width:min(320px,38vh);aspect-ratio:1/1;margin:0 auto;background:'+bd.bg+';border-radius:22px;padding:10px;box-shadow:0 8px 0 rgba(0,0,0,.55),0 12px 20px rgba(0,0,0,.5);position:relative',
       refillLives:()=>this.refillLives(),
       hasWinLine:!!line,lx1:line?cen[line[0]%3]:0,ly1:line?cen[Math.floor(line[0]/3)]:0,lx2:line?cen[line[2]%3]:0,ly2:line?cen[Math.floor(line[2]/3)]:0,
       ready:!!s.ready,readyText:s.ready,
@@ -1046,19 +1307,102 @@ class Component extends DCLogic {
       scoreP1:s.scoreP1,scoreP2:s.scoreP2,
       elapsedText:(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss,elapsedShort:s.elapsed+'s',
       turnLabel:s.turn==='X'?'Sua vez (✕)':'Vez do Bot (◯)',
-      p1Name:'Você (Jogador 1)',p2Name:s.mode==='local'?'Jogador 2':'Mariana',
+      p1Name:pName+' (Jogador 1)',p2Name:s.mode==='local'?'Jogador 2':'Mariana',
       p1Turn:turnP1?'SUA VEZ!':'Aguardando',p2Turn:turnP2?'JOGANDO…':'Aguardando',
       p1TurnStyle:turnPill(turnP1),p2TurnStyle:turnPill(turnP2),
       p2CardStyle:'background:#222a3d;border-radius:20px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 6px 0 #131b2e;'+(s.duelTab==='mesa'&&s.flip?'transform:rotate(180deg);':''),
       duelTabs,duelLocal:s.duelTab==='mesa',duelOnline:s.duelTab==='wifi',clocks,reactions,reactionShown:s.reactionShown,
       lobbyTabs,lobbyIcon:s.lobbyTab==='wifi'?'wifi':'bluetooth',lobbyState:s.lobbyTab==='wifi'?'Wi-Fi Ativado':'Bluetooth Ativado',
       peers,pinCells,keypad,
+      hasActiveRoom:!!s.createdRoom,
+      activeRoomName:s.createdRoom?s.createdRoom.name:'',
+      activeRoomPass:s.createdRoom?s.createdRoom.pass:'',
+      activeRoomPin:s.createdRoom?s.createdRoom.pin:'',
+      activeRoomHost:s.createdRoom?s.createdRoom.host:'',
+      startRoomMatch:()=>{
+        const r=this.state.createdRoom;
+        if(!r)return;
+        this.say('Aguardando adversário na sala '+r.name+'…');
+        setTimeout(()=>this.start({mode:'online'}),800);
+      },
+      closeActiveRoom:()=>{
+        this.setState({createdRoom:null});
+        this.say('Sala fechada.');
+      },
+      openCreateRoomModal:()=>this.setState({
+        modal:'createRoom',
+        roomNameInput:'Sala de '+(this.state.save.playerName||'Jogador'),
+        roomPassInput:String(Math.floor(1000+Math.random()*9000))
+      }),
+      modalCreateRoom:s.modal==='createRoom',
+      roomNameInputValue:s.roomNameInput||'',
+      onRoomNameInputChange:(e)=>this.setState({roomNameInput:e.target.value}),
+      roomPassInputValue:s.roomPassInput||'',
+      onRoomPassInputChange:(e)=>this.setState({roomPassInput:e.target.value}),
+      confirmCreateRoom:()=>{
+        const rName=(this.state.roomNameInput||'').trim()||('Sala de '+(this.state.save.playerName||'Danilo'));
+        const rPass=(this.state.roomPassInput||'').trim()||String(Math.floor(1000+Math.random()*9000));
+        const rPin=String(Math.floor(1000+Math.random()*9000));
+        const room={
+          id:'room_'+Date.now(),
+          name:rName,
+          pass:rPass,
+          pin:rPin,
+          host:this.state.save.playerName||'Danilo'
+        };
+        this.setState({createdRoom:room,modal:null,pin:rPin});
+        this.fanfare();
+        this.say('Sala "'+rName+'" criada com sucesso! Senha: '+rPass);
+      },
+      modalJoinRoom:s.modal==='joinRoom',
+      joinRoomTargetName:s.selectedRoomToJoin?s.selectedRoomToJoin.name:'',
+      joinPassInputValue:s.joinPassInput||'',
+      onJoinPassInputChange:(e)=>this.setState({joinPassInput:e.target.value}),
+      confirmJoinRoom:()=>{
+        const target=this.state.selectedRoomToJoin;
+        if(!target)return;
+        const entered=(this.state.joinPassInput||'').trim();
+        if(entered!==target.pass){
+          this.buzz(90);
+          this.say('Senha incorreta para esta sala!');
+          return;
+        }
+        this.setState({modal:null});
+        this.fanfare();
+        this.say('Senha correta! Conectando à sala '+target.name+'…');
+        setTimeout(()=>this.start({mode:'online'}),900);
+      },
+      clearPin:()=>this.setState({pin:''}),
+      openNameModal:()=>this.setState({
+        modal:'name',
+        nameInput:this.state.save.playerName||'Danilo'
+      }),
+      modalName:s.modal==='name',
+      nameInputValue:s.nameInput!=null?s.nameInput:(this.state.save.playerName||'Danilo'),
+      onNameInputChange:(e)=>this.setState({nameInput:e.target.value}),
+      namePresets:[
+        {name:'Danilo',onClick:()=>this.setState({nameInput:'Danilo'})},
+        {name:'Mestre X',onClick:()=>this.setState({nameInput:'Mestre X'})},
+        {name:'Craque do O',onClick:()=>this.setState({nameInput:'Craque do O'})},
+        {name:'Campeão',onClick:()=>this.setState({nameInput:'Campeão'})}
+      ],
+      saveName:()=>{
+        const val=(this.state.nameInput||'').trim();
+        if(!val){
+          this.say('Por favor, informe um nome.');
+          return;
+        }
+        this.put({playerName:val});
+        this.setState({modal:null});
+        this.fanfare();
+        this.say('Nome de jogador alterado para '+val+'!');
+      },
       shopTabs,items,packs,preview,isMoedas:s.shopTab==='moedas',notMoedas:s.shopTab!=='moedas',
       shopTitle:s.shopTab==='tabuleiros'?'Coleção de Tabuleiros':(s.shopTab==='auras'?'Coleção de Auras':(s.shopTab==='moedas'?'Pacotes de Moedas':'Coleção de Peças')),
       skinName:sk.name,boardName:bd.name,auraName:au.name,itemCount:s.shopTab==='moedas'?4:defs.length,
       ownedTotal,collectionPct:Math.round(ownedTotal/18*100)+'%',
       missions,missionsDone:doneCount,missionsTotal:allDefs.length,chestPct:Math.min(100,Math.round(doneCount/allDefs.length*100))+'%',
-      desafioTabs:[['diarias','Diárias','Expira 06h 42m'],['conquistas','Conquistas','24 disponíveis'],['temporada','Temporada','Passe Ouro']].map(([id,name,sub])=>({name,sub,style:'flex:1;padding:8px;border-radius:14px;font-size:13px;font-weight:800;background:'+(s.dTab===id?'#adc6ff':'transparent')+';color:'+(s.dTab===id?'#00285d':'#c2c6d6'),onClick:()=>this.setState({dTab:id})})),
+      desafioTabs:[['diarias','Diárias','Expira 24h'],['conquistas','Conquistas','24 disponíveis'],['temporada','Temporada','Passe Ouro']].map(([id,name,sub])=>({name,sub,style:'flex:1;padding:8px;border-radius:14px;font-size:13px;font-weight:800;background:'+(s.dTab===id?'#adc6ff':'transparent')+';color:'+(s.dTab===id?'#00285d':'#c2c6d6'),onClick:()=>this.setState({dTab:id})})),
       stats,badges,settings,quickToggles,
       showConfetti:s.confetti.length>0&&(s.modal==='win'||s.result==='X'),confetti:s.confetti,
       modalPause:s.modal==='pause',modalWin:s.modal==='win',modalLose:s.modal==='lose',modalDraw:s.modal==='draw',
@@ -1076,8 +1420,22 @@ class Component extends DCLogic {
       startFromModos:()=>{if(s.fmt==='online'){this.go('lobby');return;}this.start({mode:s.fmt,diff:s.diff});},
       playPhase:()=>this.start({mode:'bot',diff:sv.phase>=7?'dificil':'medio',phase:sv.phase}),
       hint:()=>this.hint(),toggleFlip:()=>this.setState({flip:!s.flip}),
-      createRoom:()=>this.say('Sala criada • PIN 8824'),rescan:()=>this.say('Varredura concluída: 3 dispositivos.'),
-      connectPin:()=>{if(s.pin.length<4){this.say('Digite os 4 dígitos do PIN.');return;}this.say('Conectando à sala '+s.pin+'…');setTimeout(()=>this.start({mode:'online'}),900);},
+      createRoom:()=>this.setState({
+        modal:'createRoom',
+        roomNameInput:'Sala de '+(this.state.save.playerName||'Jogador'),
+        roomPassInput:String(Math.floor(1000+Math.random()*9000))
+      }),
+      rescan:()=>this.say('Varredura concluída: 3 dispositivos encontrados.'),
+      connectPin:()=>{
+        if(s.pin.length<4){this.say('Digite os 4 dígitos do PIN.');return;}
+        if(s.createdRoom&&s.pin===s.createdRoom.pin){
+          this.say('Conectando à sua sala ('+s.createdRoom.name+')…');
+          setTimeout(()=>this.start({mode:'online'}),900);
+          return;
+        }
+        this.say('Conectando à sala PIN '+s.pin+'…');
+        setTimeout(()=>this.start({mode:'online'}),900);
+      },
       testSkin:()=>this.start({mode:'bot',diff:'facil'}),
       resetSave:()=>{try{localStorage.removeItem('jdv_arcade_v1');}catch(e){}this.say('Progresso zerado. Recarregue para ver.');}
     };

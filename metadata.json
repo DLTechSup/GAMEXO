@@ -1,0 +1,8 @@
+{
+  "name": "Jogo da Velha Arcade",
+  "description": "Jogo da Velha Arcade com modos vs IA em 4 níveis, campanha com 10 fases, loja de itens, conquistas e efeitos sonoros.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
